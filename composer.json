@@ -1,0 +1,23 @@
+{
+  "name": "wexample/symfony-wex",
+  "description": "Symfony integration of the wex CLI PHP port",
+  "type": "library",
+  "license": "MIT",
+  "version": "0.0.1",
+  "autoload": {
+    "psr-4": {
+      "Wexample\\SymfonyWex\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "weeger",
+      "email": "romain.weeger@wexample.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "wexample/symfony-helpers": ">=4.0.0",
+    "wexample/php-wex": ">=0.0.1"
+  }
+}
