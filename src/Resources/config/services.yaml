@@ -6,3 +6,9 @@ services:
 
     Wexample\SymfonyWex\:
         resource: '../../{Service}'
+
+    Wexample\PhpWex\Common\WexClient:
+        arguments:
+            $binary: '%wexample_symfony_wex.binary%'
+            $workingDirectory: '%wexample_symfony_wex.working_directory%'
+            $timeout: '%wexample_symfony_wex.timeout%'
