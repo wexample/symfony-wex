@@ -1,17 +1,63 @@
 # symfony_wex
 
-Version: 0.0.2
+Version: 1.0.0
 
-Symfony integration of the wex CLI PHP port
+`wexample/symfony-wex` is a Symfony bundle that integrates `wexample/php-wex` into the Symfony service container, registering `WexClient` as an autowired service so application code can invoke wex CLI commands without managing processes directly. It exposes a `wexample_symfony_wex` configuration block where the wex binary name or path, the working directory commands run from, and an optional timeout can be set. It targets Symfony developers who need programmatic access to the wex CLI from within a Symfony application.
 
 ## Table of Contents
 
+- [Architecture](#architecture)
 - [Integration in the Suite](#integration-in-the-suite)
 - [Dependencies](#dependencies)
 - [Versioning & Compatibility Policy](#versioning--compatibility-policy)
 - [License](#license)
 - [About us](#about-us)
 - [Migration Notes](#migration-notes)
+
+## Architecture
+
+`wexample/symfony-wex` is a thin Symfony bundle whose only job is to wire `wexample/php-wex`'s `WexClient` into the Symfony container and expose it through standard bundle configuration. All execution logic lives in `php-wex`; this package owns nothing beyond the Symfony integration layer.
+
+### Entry point
+
+src/WexampleSymfonyWexBundle.php declares the bundle. It extends `AbstractBundle` from `wexample/symfony-helpers`, which handles the convention-based discovery of the extension class and keeps the bundle class itself empty.
+
+### DependencyInjection
+
+src/DependencyInjection/Configuration.php defines the bundle's configuration tree under the root key `wexample_symfony_wex`. It exposes three scalar nodes:
+
+- `binary` — name resolved against `PATH`, or an absolute path to a wex executable; defaults to `Globals::CORE_COMMAND_NAME` from `wexample/php-wex`.
+- `working_directory` — the directory commands run from, which controls which app's commands are reachable; defaults to `null`, resolved at load time to `kernel.project_dir`.
+- `timeout` — seconds before a command is terminated; `null` waits indefinitely.
+
+src/DependencyInjection/WexampleSymfonyWexExtension.php loads the service definition file, processes the configuration through `Configuration`, and writes the three resulting values into container parameters:
+
+```
+wexample_symfony_wex.binary
+wexample_symfony_wex.working_directory
+wexample_symfony_wex.timeout
+```
+
+When `working_directory` is absent from the user's config, the extension falls back to `kernel.project_dir` directly:
+
+```php
+$config['working_directory'] ?? $container->getParameter('kernel.project_dir')
+```
+
+### Service wiring
+
+src/Resources/config/services.yaml does two things:
+
+1. Registers every class under `src/Service/` with autowiring and autoconfiguration.
+2. Explicitly registers `Wexample\PhpWex\Common\WexClient`, injecting the three container parameters as constructor arguments (`$binary`, `$workingDirectory`, `$timeout`).
+
+`WexClient` is therefore available for injection into any service or controller in the host application without further setup.
+
+### Call path
+
+At container compile time: extension loads → configuration processed → three parameters written → `WexClient` bound to those parameters.
+
+At runtime: a service in `src/Service/` (or any host-application class) receives `WexClient` by type-hint. Calling a method on it invokes the wex binary at `binary`, from `working_directory`, subject to `timeout`. No Symfony code is on that execution path; the bundle's role ends at wiring.
 
 ## Integration in the Suite
 
@@ -26,8 +72,8 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 ## Dependencies
 
 - php: >=8.2
-- wexample/symfony-helpers: >=4.0.0
-- wexample/php-wex: >=0.0.1
+- wexample/symfony-helpers: >=5.0.0
+- wexample/php-wex: >=1.0.0
 
 ## Versioning & Compatibility Policy
 

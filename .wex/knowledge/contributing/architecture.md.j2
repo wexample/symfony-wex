@@ -1,0 +1,44 @@
+## Architecture
+
+`wexample/symfony-wex` is a thin Symfony bundle whose only job is to wire `wexample/php-wex`'s `WexClient` into the Symfony container and expose it through standard bundle configuration. All execution logic lives in `php-wex`; this package owns nothing beyond the Symfony integration layer.
+
+### Entry point
+
+{{ path("src/WexampleSymfonyWexBundle.php") }} declares the bundle. It extends `AbstractBundle` from `wexample/symfony-helpers`, which handles the convention-based discovery of the extension class and keeps the bundle class itself empty.
+
+### DependencyInjection
+
+{{ path("src/DependencyInjection/Configuration.php") }} defines the bundle's configuration tree under the root key `wexample_symfony_wex`. It exposes three scalar nodes:
+
+- `binary` — name resolved against `PATH`, or an absolute path to a wex executable; defaults to `Globals::CORE_COMMAND_NAME` from `wexample/php-wex`.
+- `working_directory` — the directory commands run from, which controls which app's commands are reachable; defaults to `null`, resolved at load time to `kernel.project_dir`.
+- `timeout` — seconds before a command is terminated; `null` waits indefinitely.
+
+{{ path("src/DependencyInjection/WexampleSymfonyWexExtension.php") }} loads the service definition file, processes the configuration through `Configuration`, and writes the three resulting values into container parameters:
+
+```
+wexample_symfony_wex.binary
+wexample_symfony_wex.working_directory
+wexample_symfony_wex.timeout
+```
+
+When `working_directory` is absent from the user's config, the extension falls back to `kernel.project_dir` directly:
+
+```php
+$config['working_directory'] ?? $container->getParameter('kernel.project_dir')
+```
+
+### Service wiring
+
+{{ path("src/Resources/config/services.yaml") }} does two things:
+
+1. Registers every class under `src/Service/` with autowiring and autoconfiguration.
+2. Explicitly registers `Wexample\PhpWex\Common\WexClient`, injecting the three container parameters as constructor arguments (`$binary`, `$workingDirectory`, `$timeout`).
+
+`WexClient` is therefore available for injection into any service or controller in the host application without further setup.
+
+### Call path
+
+At container compile time: extension loads → configuration processed → three parameters written → `WexClient` bound to those parameters.
+
+At runtime: a service in `src/Service/` (or any host-application class) receives `WexClient` by type-hint. Calling a method on it invokes the wex binary at `binary`, from `working_directory`, subject to `timeout`. No Symfony code is on that execution path; the bundle's role ends at wiring.

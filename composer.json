@@ -3,7 +3,7 @@
   "description": "Symfony integration of the wex CLI PHP port",
   "type": "library",
   "license": "MIT",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "autoload": {
     "psr-4": {
       "Wexample\\SymfonyWex\\": "src/"
@@ -17,7 +17,7 @@
   ],
   "require": {
     "php": ">=8.2",
-    "wexample/symfony-helpers": ">=4.0.0",
-    "wexample/php-wex": ">=0.0.1"
+    "wexample/symfony-helpers": ">=5.0.0",
+    "wexample/php-wex": ">=1.0.0"
   }
 }
