@@ -16,7 +16,6 @@ class AppForm extends AbstractForm
 
         $resolver->setDefaults([
             'data_class' => App::class,
-            'translation_domain' => 'WexampleSymfonyWexBundle.forms.app_form',
         ]);
     }
 
