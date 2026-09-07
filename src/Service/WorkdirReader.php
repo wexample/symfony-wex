@@ -9,23 +9,25 @@ use Wexample\SymfonyWex\Entity\App;
 /**
  * Reads what an app says about itself in its own `.wex` directory.
  *
- * Only the app's `config.yml` is read. A manager holding a configuration beside
- * the app, about the app, is a different source with a different owner, and
- * merging the two is the caller's business, not this reader's.
+ * Where a manager holds a configuration beside the app, about the app, that is
+ * a different source with a different owner: finding it is the caller's
+ * business, and it is passed in rather than looked for here.
  */
 class WorkdirReader
 {
     public const CONFIG_FILE_NAME = 'config.yml';
 
     /**
-     * @param string   $path where the app is mounted
-     * @param App|null $into the row already held for that path, overwritten in place
+     * @param string               $path  where the app is mounted
+     * @param App|null             $into  the row already held for that path, overwritten in place
+     * @param array<string, mixed> $about what someone else holds about that app
      *
      * @return App|null null when nothing is mounted there
      */
     public function read(
         string $path,
         ?App $into = null,
+        array $about = [],
     ): ?App {
         if (! is_dir($path)) {
             return null;
@@ -33,7 +35,8 @@ class WorkdirReader
 
         // A directory carrying no `.wex` is still an app: a board mounts apps
         // that know nothing of wex, and they must appear rather than vanish.
-        $config = $this->config($path);
+        // What it says about itself wins over what is said about it.
+        $config = array_replace_recursive($about, $this->config($path));
         $global = $config['global'] ?? [];
 
         $app = $into ?? new App($path);
