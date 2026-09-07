@@ -1,0 +1,10 @@
+field:
+  description:
+    label: Description
+    help: What this app is for, in your own words.
+
+action:
+  submit: Save
+
+success:
+  message: App saved

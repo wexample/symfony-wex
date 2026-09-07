@@ -20,7 +20,7 @@ Version: 1.0.2
 
 ### Entry point
 
-src/WexampleSymfonyWexBundle.php declares the bundle. It extends `AbstractBundle` from `wexample/symfony-helpers`, which handles the convention-based discovery of the extension class and keeps the bundle class itself empty.
+src/WexampleSymfonyWexBundle.php declares the bundle. It extends `AbstractBundle` from `wexample/symfony-helpers`, which handles the convention-based discovery of the extension class, and implements `LoaderBundleInterface` to hand `assets/` to `wexample/symfony-loader` — that registration is what gives the bundle's translations the `WexampleSymfonyWexBundle` prefix, and what lets `AppForm` find its labels and its template under `assets/forms/`.
 
 ### DependencyInjection
 
