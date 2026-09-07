@@ -5,7 +5,7 @@ services:
         public: false
 
     Wexample\SymfonyWex\:
-        resource: '../../{Service}'
+        resource: '../../{Repository,Service}'
 
     Wexample\PhpWex\Common\WexClient:
         arguments:
