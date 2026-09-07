@@ -5,6 +5,7 @@ namespace Wexample\SymfonyWex\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Wexample\SymfonyForms\Attribute\EntityForm;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Entity\Traits\HasDescriptionTrait;
 use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
@@ -20,6 +21,7 @@ use Wexample\SymfonyWex\Repository\AppRepository;
  */
 #[ORM\Entity(repositoryClass: AppRepository::class)]
 #[ORM\Table(name: 'app')]
+#[EntityForm]
 class App extends AbstractEntity
 {
     use HasDescriptionTrait;
