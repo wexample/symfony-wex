@@ -5,12 +5,7 @@ services:
         public: false
 
     Wexample\SymfonyWex\:
-        resource: '../../{Form,Repository,Service}'
-
-    Wexample\SymfonyWex\Controller\:
-        resource: '../../Controller/'
-        exclude: '../../Controller/**/Abstract*.php'
-        tags: ['controller.service_arguments']
+        resource: '../../{Controller,Form,Repository,Service}'
 
     Wexample\PhpWex\Common\WexClient:
         arguments:
