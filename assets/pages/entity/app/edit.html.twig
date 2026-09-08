@@ -1,4 +1,7 @@
-{%- extends '@WexampleSymfonyLoaderBundle/layouts/default/layout.html.twig' -%}
+{#- The design system's layouts ship their stylesheets as partials, so a page
+    extending one directly gets the markup and none of the paint. The host app's
+    layout is the built entry, and it is what the demo bundle extends too. -#}
+{%- extends '@front/layouts/private/layout.html.twig' -%}
 
 {%- block page_body -%}
     <div class="block block--padded block--vertical">
