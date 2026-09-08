@@ -9,10 +9,11 @@ use Wexample\SymfonyWex\Repository\AppRepository;
 /**
  * Keeps the rows in step with what the workdirs say, for whoever asks for it.
  *
- * Nothing in this package calls it: the entity, the repository and the reader
- * are each usable alone, and an application persisting an App of its own is not
- * made to project anything. Which workdirs exist is likewise not known here —
- * the caller lists them, because it is the caller that mounts them.
+ * Only the form processor calls it, and only for the app it just wrote: the
+ * entity, the repository and the reader are each usable alone, and an
+ * application holding an App of its own is not made to project anything. Which
+ * workdirs exist is likewise not known here — the caller lists them, because it
+ * is the caller that mounts them.
  *
  * Reading is idempotent: identity comes from the mount path, so the same
  * workdir read twice writes the same row, and an empty database is filled by
