@@ -1,0 +1,8 @@
+{%- extends '@WexampleSymfonyLoaderBundle/layouts/default/layout.html.twig' -%}
+
+{%- block page_body -%}
+    <div class="block block--padded block--vertical">
+        <h2>{{ '@page::content_title' | trans }}</h2>
+        {{ form_load(render_pass, form_edit, '@WexampleSymfonyWexBundle/forms/app_form.html.twig') }}
+    </div>
+{%- endblock -%}
