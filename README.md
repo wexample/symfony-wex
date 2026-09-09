@@ -72,6 +72,10 @@ Visit the [Wexample Suite documentation](https://docs.wexample.com) for the comp
 ## Dependencies
 
 - php: >=8.2
+- doctrine/orm: ^3.0
+- symfony/uid: ^7.0
+- symfony/yaml: ^7.0
+- wexample/symfony-forms: >=3.0.0
 - wexample/symfony-helpers: >=7.0.0
 - wexample/php-wex: >=1.0.0
 
