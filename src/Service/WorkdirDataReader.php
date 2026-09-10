@@ -33,10 +33,20 @@ final readonly class WorkdirDataReader
         $pattern = $this->directory($path, $kind).'/*.'.self::FILE_EXTENSION;
 
         foreach (glob($pattern) ?: [] as $file) {
-            $records[$file] = Yaml::parseFile($file) ?? [];
+            $records[$file] = $this->read($file);
         }
 
         return $records;
+    }
+
+    /**
+     * One record, named by the file the listing gave back.
+     *
+     * @return array<string, mixed>
+     */
+    public function read(string $file): array
+    {
+        return Yaml::parseFile($file) ?? [];
     }
 
     private function directory(
