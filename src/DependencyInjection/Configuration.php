@@ -30,6 +30,23 @@ class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
+            ->arrayNode('agent_server')
+            ->info('The wex agent server turns are run by. Left out, nothing here can run one.')
+            ->children()
+            ->scalarNode('url')
+            ->defaultNull()
+            ->info('Base address of the server, without a trailing slash.')
+            ->end()
+            ->scalarNode('token')
+            ->defaultNull()
+            ->info('Bearer every request to it carries.')
+            ->end()
+            ->end()
+            ->end()
+            ->end();
+
+        $treeBuilder->getRootNode()
+            ->children()
             ->floatNode('timeout')
             ->defaultNull()
             ->info('Seconds before a command is terminated. Null waits indefinitely.')

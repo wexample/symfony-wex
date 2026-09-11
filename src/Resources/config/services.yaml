@@ -7,6 +7,15 @@ services:
     Wexample\SymfonyWex\:
         resource: '../../{Controller,Form,Repository,Service}'
 
+    Wexample\SymfonyWex\Service\AgentServerClient:
+        arguments:
+            $url: '%wexample_symfony_wex.agent_server.url%'
+            $token: '%wexample_symfony_wex.agent_server.token%'
+        # A turn leaves its trace on a channel of its own, so that reading what
+        # an agent did does not mean reading everything else the app logged.
+        tags:
+            - { name: monolog.logger, channel: agent }
+
     Wexample\PhpWex\Common\WexClient:
         arguments:
             $binary: '%wexample_symfony_wex.binary%'
