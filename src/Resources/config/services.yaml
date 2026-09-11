@@ -11,7 +11,6 @@ services:
         arguments:
             $url: '%wexample_symfony_wex.agent_server.url%'
             $token: '%wexample_symfony_wex.agent_server.token%'
-            $serverAppPath: '%wexample_symfony_wex.agent_server.app_path%'
         # A turn leaves its trace on a channel of its own, so that reading what
         # an agent did does not mean reading everything else the app logged.
         tags:

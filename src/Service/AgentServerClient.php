@@ -43,7 +43,6 @@ final readonly class AgentServerClient
         private LoggerInterface $logger,
         private ?string $url,
         private ?string $token,
-        private string $serverAppPath,
     ) {
     }
 
@@ -64,26 +63,22 @@ final readonly class AgentServerClient
             throw new RuntimeException('No agent server is configured: see wexample_symfony_wex.agent_server.');
         }
 
-        $payload = [
-            'session_id' => $sessionId,
-            'prompt' => $prompt,
-        ];
-
-        // Which app the turn is run on, since one server answers for all the ones
-        // it was given. The app is named by its path and not by an identity: the
-        // path is what both sides see. The app the server was started on is the
-        // one it is never told about — it sits outside the root a named path is
-        // checked against, and is what the server answers for when nothing is said.
-        if ($appPath !== $this->serverAppPath) {
-            $payload['app'] = $appPath;
-        }
-
         $response = $this->httpClient->request(
             Request::METHOD_POST,
             $this->url.self::PATH_MESSAGE,
             [
                 'auth_bearer' => $this->token,
-                'json' => $payload,
+                'json' => [
+                    // Which app the turn is run on, since one server answers for
+                    // all the ones it was given. Named by its path and not by an
+                    // identity: the path is what both sides see. Always named,
+                    // even when it is the app the server was started on — a
+                    // server that disagrees with us then refuses the turn instead
+                    // of running it somewhere else.
+                    'app' => $appPath,
+                    'session_id' => $sessionId,
+                    'prompt' => $prompt,
+                ],
                 'timeout' => self::TIMEOUT_IDLE,
                 // A turn lasts as long as the model does, and nothing here knows
                 // how long that is.
