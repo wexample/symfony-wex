@@ -47,6 +47,22 @@ final readonly class WorkdirDataWriter
     }
 
     /**
+     * Opens the directory a record carries its files in.
+     *
+     * A record is one file, so whatever is bigger than a value it holds — a
+     * transcript, the lock a turn takes while it runs — goes in a directory
+     * beside it bearing the same identity. wex makes that directory the moment
+     * it opens a record and writes in it afterwards without asking whether it
+     * is there, so a record opened from here owes it the same.
+     */
+    public function openAssetsDirectory(string $file): void
+    {
+        $this->filesystem->mkdir(
+            substr($file, 0, -(strlen(WorkdirDataReader::FILE_EXTENSION) + 1))
+        );
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function parse(string $file): array

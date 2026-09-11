@@ -43,15 +43,20 @@ final readonly class AgentServerClient
         private LoggerInterface $logger,
         private ?string $url,
         private ?string $token,
+        private string $serverAppPath,
     ) {
     }
 
     /**
      * Continues a conversation, and gives back each event as the server writes it.
      *
+     * @param string $appPath where the app holding the conversation is mounted,
+     *                        which the server sees at that same path
+     *
      * @return iterable<array<string, mixed>>
      */
     public function sendToSession(
+        string $appPath,
         string $sessionId,
         string $prompt,
     ): iterable {
@@ -59,15 +64,26 @@ final readonly class AgentServerClient
             throw new RuntimeException('No agent server is configured: see wexample_symfony_wex.agent_server.');
         }
 
+        $payload = [
+            'session_id' => $sessionId,
+            'prompt' => $prompt,
+        ];
+
+        // Which app the turn is run on, since one server answers for all the ones
+        // it was given. The app is named by its path and not by an identity: the
+        // path is what both sides see. The app the server was started on is the
+        // one it is never told about — it sits outside the root a named path is
+        // checked against, and is what the server answers for when nothing is said.
+        if ($appPath !== $this->serverAppPath) {
+            $payload['app'] = $appPath;
+        }
+
         $response = $this->httpClient->request(
             Request::METHOD_POST,
             $this->url.self::PATH_MESSAGE,
             [
                 'auth_bearer' => $this->token,
-                'json' => [
-                    'session_id' => $sessionId,
-                    'prompt' => $prompt,
-                ],
+                'json' => $payload,
                 'timeout' => self::TIMEOUT_IDLE,
                 // A turn lasts as long as the model does, and nothing here knows
                 // how long that is.

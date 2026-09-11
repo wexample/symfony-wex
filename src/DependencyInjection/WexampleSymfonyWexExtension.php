@@ -43,5 +43,10 @@ class WexampleSymfonyWexExtension extends AbstractWexampleSymfonyExtension
             'wexample_symfony_wex.agent_server.token',
             $config['agent_server']['token']
         );
+
+        $container->setParameter(
+            'wexample_symfony_wex.agent_server.app_path',
+            $config['agent_server']['app_path'] ?? $container->getParameter('kernel.project_dir')
+        );
     }
 }

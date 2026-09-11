@@ -49,6 +49,18 @@ final readonly class WorkdirDataReader
         return Yaml::parseFile($file) ?? [];
     }
 
+    /**
+     * Which app a record belongs to, read backwards off its own file.
+     *
+     * A record sits at `<app>/.wex/data/<kind>/<name>.yml`, and nothing inside
+     * it says where it lives: the app is those four levels up. The inverse of
+     * what `directory()` builds, and beside it for that reason.
+     */
+    public function appPath(string $file): string
+    {
+        return dirname($file, 4);
+    }
+
     private function directory(
         string $path,
         string $kind,
