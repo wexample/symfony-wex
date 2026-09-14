@@ -30,7 +30,11 @@ final readonly class AgentServerClient
 
     public const string KEY_MESSAGE = 'message';
 
+    public const string KEY_RECORDS = 'records';
+
     public const string KEY_TYPE = 'type';
+
+    public const string PATH_DATA = '/data/';
 
     public const string PATH_LOGIN_COMPLETE = '/auth/claude/complete';
 
@@ -122,6 +126,20 @@ final readonly class AgentServerClient
                 }
             }
         }
+    }
+
+    /**
+     * The records of a kind wex owns, in the order it holds them.
+     *
+     * Same shape as a `.wex/data` directory read from disk — an identity and a
+     * few fields — so what comes back goes to the same projector, and a kind
+     * added on the server is not a pipe added here.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function data(string $kind): array
+    {
+        return $this->call(Request::METHOD_GET, self::PATH_DATA.$kind)[self::KEY_RECORDS];
     }
 
     /**
