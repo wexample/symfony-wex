@@ -26,11 +26,19 @@ final readonly class AgentServerClient
 
     public const string EVENT_SESSION = 'session';
 
+    /** An assistant chunk, said as the model writes it. */
+    public const string EVENT_TEXT = 'text';
+
+    /** A tool the turn reached for, named with what it was called on. */
+    public const string EVENT_TOOL = 'tool';
+
     public const string KEY_ERROR = 'error';
 
     public const string KEY_MESSAGE = 'message';
 
     public const string KEY_RECORDS = 'records';
+
+    public const string KEY_TEXT = 'text';
 
     public const string KEY_TYPE = 'type';
 
