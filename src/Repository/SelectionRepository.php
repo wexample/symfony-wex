@@ -30,7 +30,10 @@ class SelectionRepository extends AbstractRepository
     }
 
     /**
-     * The selections declared under a directory, newest first.
+     * The selections declared under a directory, by title.
+     *
+     * Alphabetical and not by date: this answers a listing and a picker alike,
+     * and somebody looking for one they wrote knows its name, not its age.
      *
      * What that directory is stays the caller's business: a selection knows the
      * file it comes from, and whoever mounted that file knows what it means.
@@ -42,7 +45,7 @@ class SelectionRepository extends AbstractRepository
         return $this->createQueryBuilder('selection')
             ->where('selection.path LIKE :prefix')
             ->setParameter('prefix', addcslashes($prefix, '%_\\').'/%')
-            ->orderBy('selection.dateCreated', self::SORT_DESC)
+            ->orderBy('selection.title', self::SORT_ASC)
             ->getQuery()
             ->getResult();
     }

@@ -7,6 +7,10 @@ services:
     Wexample\SymfonyWex\:
         resource: '../../{Controller,Form,Repository,Service}'
 
+    Wexample\SymfonyWex\Api\Normalizer\:
+        resource: '../../Api/Normalizer/*'
+        tags: ['serializer.normalizer']
+
     Wexample\SymfonyWex\Service\AgentServerClient:
         arguments:
             $url: '%wexample_symfony_wex.agent_server.url%'
