@@ -1,0 +1,13 @@
+field:
+  title:
+    label: Title
+    help: What to call this selection, so it can be told from the others.
+  patterns:
+    label: Patterns
+    help: "One rule per line, as in a .gitignore: a line takes what it matches, a line opening on ! gives back what the lines above it took, ** crosses directories and # opens a comment."
+
+action:
+  submit: Save
+
+success:
+  message: Selection saved

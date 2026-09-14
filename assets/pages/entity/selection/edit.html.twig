@@ -1,0 +1,11 @@
+{#- The design system's layouts ship their stylesheets as partials, so a page
+    extending one directly gets the markup and none of the paint. The host app's
+    layout is the built entry, and it is what every page of the board extends. -#}
+{%- extends '@front/layouts/private/layout.html.twig' -%}
+
+{%- block page_body -%}
+    <div class="block block--padded block--vertical">
+        <h2>{{ '@page::content_title' | trans }}</h2>
+        {{ form_load(render_pass, form_edit, '@WexampleSymfonyWexBundle/forms/selection_form.html.twig') }}
+    </div>
+{%- endblock -%}

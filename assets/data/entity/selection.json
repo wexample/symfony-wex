@@ -1,0 +1,194 @@
+{
+    "name": "selection",
+    "type": "class",
+    "description": "A subset of the files of an app, said by the patterns that match it.\nA selection travels with the project it describes, so it is declared in a\nrecord — `.wex\/data\/selection\/<uuid>.yml` — and this row is rebuilt from that\nfile and never written back to it. The declaration is named by its own\nidentity, so a selection retitled stays the same selection.\nWhat it selects is not decided here: the patterns are held as they were\nwritten, and whoever walks a tree reads them.",
+    "properties": [
+        {
+            "name": "title",
+            "type": "string",
+            "nullable": true,
+            "default": null
+        },
+        {
+            "name": "id",
+            "type": "Symfony\\Component\\Uid\\Uuid"
+        },
+        {
+            "name": "path",
+            "type": "string"
+        },
+        {
+            "name": "patterns",
+            "type": "string",
+            "default": ""
+        },
+        {
+            "name": "dateCreated",
+            "type": "DateTimeInterface",
+            "nullable": true,
+            "default": null
+        }
+    ],
+    "methods": [
+        {
+            "type": "method",
+            "name": "getTitle",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setTitle",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "title"
+                }
+            ],
+            "return": {
+                "type": "static"
+            }
+        },
+        {
+            "type": "method",
+            "name": "buildEntityPath",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "className"
+                }
+            ],
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityKeyName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityShortName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getId",
+            "return": {
+                "type": "Symfony\\Component\\Uid\\Uuid"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setId",
+            "parameters": [
+                {
+                    "type": "Symfony\\Component\\Uid\\Uuid",
+                    "name": "id"
+                }
+            ],
+            "return": {
+                "type": "void"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getTableizedName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getCamelName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "__construct",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "path"
+                }
+            ]
+        },
+        {
+            "type": "method",
+            "name": "idFor",
+            "description": "The identity the declaration is named by, read straight off the file name.",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "path"
+                }
+            ],
+            "return": {
+                "type": "Uuid"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getPath",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getPatterns",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setPatterns",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "patterns"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getPatternLines",
+            "description": "The rules as a list, blank lines and comments left out — what a reader\nwalking a tree asks for, rather than the block a human typed.",
+            "return": {
+                "type": "array"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getDateCreated",
+            "return": {
+                "type": "DateTimeInterface"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setDateCreated",
+            "parameters": [
+                {
+                    "type": "DateTimeInterface",
+                    "name": "dateCreated"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        }
+    ]
+}
