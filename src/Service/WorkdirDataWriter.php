@@ -57,9 +57,27 @@ final readonly class WorkdirDataWriter
      */
     public function openAssetsDirectory(string $file): void
     {
-        $this->filesystem->mkdir(
-            substr($file, 0, -(strlen(WorkdirDataReader::FILE_EXTENSION) + 1))
-        );
+        $this->filesystem->mkdir($this->assetsDirectory($file));
+    }
+
+    /**
+     * Takes a record away, and the directory it carried its files in.
+     *
+     * Both go, because both were opened here: a directory left behind would be
+     * an identity still held by nothing, and the next record to take that same
+     * uuid would inherit its contents.
+     */
+    public function remove(string $file): void
+    {
+        $this->filesystem->remove([
+            $file,
+            $this->assetsDirectory($file),
+        ]);
+    }
+
+    private function assetsDirectory(string $file): string
+    {
+        return substr($file, 0, -(strlen(WorkdirDataReader::FILE_EXTENSION) + 1));
     }
 
     /**
