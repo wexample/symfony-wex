@@ -1,0 +1,19 @@
+field:
+  title:
+    label: Title
+    help: What to call this process, so it can be told from the others.
+  type:
+    label: Type
+    help: The name of the treatment to run. A bundle mounted in the board brings the code and the name it answers to.
+  selection:
+    label: Selection
+    help: The files the process runs on.
+  options:
+    label: Options
+    help: What the type is told, one key per line in YAML. What they mean is the type's own business.
+
+action:
+  submit: Save
+
+success:
+  message: Process saved

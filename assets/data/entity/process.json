@@ -1,0 +1,246 @@
+{
+    "name": "process",
+    "type": "class",
+    "description": "A treatment declared on a selection of files: what to run, and on what.\nThis is the declaration and not the running of it. What a process did, how\nfar it got and when, belongs to a run — another record, opened by whoever\nstarts one, and none of this row's business.\nLike a selection, it travels with the project it describes: it is declared in\n`.wex\/data\/process\/<uuid>.yml`, and this row is rebuilt from that file and\nnever written back to it.",
+    "properties": [
+        {
+            "name": "title",
+            "type": "string",
+            "nullable": true,
+            "default": null
+        },
+        {
+            "name": "id",
+            "type": "Symfony\\Component\\Uid\\Uuid"
+        },
+        {
+            "name": "path",
+            "type": "string"
+        },
+        {
+            "name": "type",
+            "type": "string",
+            "default": ""
+        },
+        {
+            "name": "selection",
+            "type": "Selection",
+            "nullable": true,
+            "default": null
+        },
+        {
+            "name": "options",
+            "type": "string",
+            "default": ""
+        },
+        {
+            "name": "dateCreated",
+            "type": "DateTimeInterface",
+            "nullable": true,
+            "default": null
+        }
+    ],
+    "methods": [
+        {
+            "type": "method",
+            "name": "getTitle",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setTitle",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "title"
+                }
+            ],
+            "return": {
+                "type": "static"
+            }
+        },
+        {
+            "type": "method",
+            "name": "buildEntityPath",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "className"
+                }
+            ],
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityKeyName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityShortName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getId",
+            "return": {
+                "type": "Symfony\\Component\\Uid\\Uuid"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setId",
+            "parameters": [
+                {
+                    "type": "Symfony\\Component\\Uid\\Uuid",
+                    "name": "id"
+                }
+            ],
+            "return": {
+                "type": "void"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getTableizedName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getCamelName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "__construct",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "path"
+                }
+            ]
+        },
+        {
+            "type": "method",
+            "name": "idFor",
+            "description": "The identity the declaration is named by, read straight off the file name.",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "path"
+                }
+            ],
+            "return": {
+                "type": "Uuid"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getPath",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getType",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setType",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "type"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getSelection",
+            "return": {
+                "type": "Selection"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setSelection",
+            "parameters": [
+                {
+                    "type": "Selection",
+                    "name": "selection"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getOptions",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setOptions",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "options"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getOptionValues",
+            "description": "The options as the values they stand for, for the type about to read them.",
+            "return": {
+                "type": "array",
+                "description": "mixed>"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getDateCreated",
+            "return": {
+                "type": "DateTimeInterface"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setDateCreated",
+            "parameters": [
+                {
+                    "type": "DateTimeInterface",
+                    "name": "dateCreated"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        }
+    ]
+}
