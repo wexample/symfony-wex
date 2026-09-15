@@ -11,13 +11,16 @@ use Wexample\SymfonyForms\Form\Type\TextareaInputType;
 use Wexample\SymfonyForms\Form\Type\TextInputType;
 use Wexample\SymfonyWex\Entity\Process;
 use Wexample\SymfonyWex\Entity\Selection;
+use Wexample\SymfonyWex\Form\Type\ProcessTypeChoiceType;
 use Wexample\SymfonyWex\Form\Type\SelectionChoiceType;
 use Wexample\SymfonyWex\Repository\SelectionRepository;
+use Wexample\SymfonyWex\Service\ProcessTypeRegistry;
 
 class ProcessForm extends AbstractForm
 {
     public function __construct(
         private readonly SelectionRepository $selections,
+        private readonly ProcessTypeRegistry $types,
     ) {
     }
 
@@ -45,15 +48,6 @@ class ProcessForm extends AbstractForm
                 ]
             )
             ->add(
-                'type',
-                TextInputType::class,
-                [
-                    self::FIELD_OPTION_NAME_LABEL => true,
-                    self::FIELD_OPTION_NAME_REQUIRED => true,
-                    'help' => true,
-                ]
-            )
-            ->add(
                 'options',
                 TextareaInputType::class,
                 [
@@ -63,14 +57,25 @@ class ProcessForm extends AbstractForm
                 ]
             );
 
-        // The selections offered are the ones of the app this process belongs
-        // to, and which app that is only the process being edited can say — so
-        // the field is added once there is one.
+        // Both fields are added once there is a process to read them from: the
+        // selections offered are the ones of the app it belongs to, and the
+        // types offered have to hold the one it already names.
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event): void {
                 /** @var Process $process */
                 $process = $event->getData();
+
+                $event->getForm()->add(
+                    'type',
+                    ProcessTypeChoiceType::class,
+                    [
+                        self::FIELD_OPTION_NAME_LABEL => true,
+                        self::FIELD_OPTION_NAME_REQUIRED => true,
+                        'help' => true,
+                        'choices' => $this->typeChoices($process->getType()),
+                    ]
+                );
 
                 $event->getForm()->add(
                     'selection',
@@ -86,6 +91,26 @@ class ProcessForm extends AbstractForm
         );
 
         $this->builderAddSubmit($builder);
+    }
+
+    /**
+     * The treatments to choose from, the one already named among them.
+     *
+     * A bundle can be removed while a process still names what it brought: the
+     * choice is kept so the process stays editable, rather than answering with
+     * a field refusing the value it holds.
+     *
+     * @return array<string, string> label to name
+     */
+    private function typeChoices(string $current): array
+    {
+        $choices = $this->types->choices();
+
+        if ('' !== $current && ! in_array($current, $choices, true)) {
+            $choices[$current] = $current;
+        }
+
+        return $choices;
     }
 
     /**

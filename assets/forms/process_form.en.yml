@@ -4,7 +4,7 @@ field:
     help: What to call this process, so it can be told from the others.
   type:
     label: Type
-    help: The name of the treatment to run. A bundle mounted in the board brings the code and the name it answers to.
+    help: The treatment to run. A bundle mounted in the board brings the code, and declaring it is what puts it in this list.
   selection:
     label: Selection
     help: The files the process runs on.
