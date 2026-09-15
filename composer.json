@@ -23,6 +23,7 @@
     "symfony/yaml": "^7.0",
     "wexample/symfony-forms": ">=3.0.0",
     "wexample/symfony-helpers": ">=7.0.0",
+    "wexample/symfony-messenger": ">=1.0.0",
     "wexample/php-wex": ">=1.0.0"
   },
   "extra": {
