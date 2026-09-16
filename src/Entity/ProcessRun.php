@@ -10,6 +10,8 @@ use Symfony\Component\Yaml\Yaml;
 use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
+use Wexample\SymfonyLive\Attribute\LiveEntity;
+use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyWex\Repository\ProcessRunRepository;
 
 /**
@@ -26,6 +28,9 @@ use Wexample\SymfonyWex\Repository\ProcessRunRepository;
  * why the two of them are never interested in the same fields at the same time.
  */
 #[ApiEntity]
+// A run is the one row here that moves on its own: whoever is watching it is
+// told, rather than having to ask again.
+#[LiveEntity(actions: [LiveTopicAction::UPDATE])]
 #[PseudocodeExport(inherited: true)]
 #[ORM\Entity(repositoryClass: ProcessRunRepository::class)]
 #[ORM\Table(name: 'process_run')]
