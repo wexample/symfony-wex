@@ -9,7 +9,7 @@ use Wexample\SymfonyWex\Entity\ProcessRun;
 class ProcessRunDto extends AbstractEntityDto
 {
     /** What was run, by identity: a caller showing it has the process already. */
-    public ?string $processId;
+    public ?string $process;
 
     public string $state;
 
@@ -36,7 +36,7 @@ class ProcessRunDto extends AbstractEntityDto
     {
         $dto = parent::fromEntity($entity);
 
-        $dto->processId = $entity->getProcess()?->getId()->toRfc4122();
+        $dto->process = $entity->getProcess()?->getId()->toRfc4122();
         $dto->state = $entity->getState();
         $dto->itemsTotal = $entity->getItemsTotal();
         $dto->itemsDone = $entity->getItemsDone();

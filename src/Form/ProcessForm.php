@@ -54,6 +54,9 @@ class ProcessForm extends AbstractForm
                     self::FIELD_OPTION_NAME_LABEL => true,
                     self::FIELD_OPTION_NAME_REQUIRED => false,
                     'help' => true,
+                    // Left empty, the field submits null; the entity says an
+                    // absence of options as an empty block, so the form does too.
+                    'empty_data' => '',
                 ]
             );
 
