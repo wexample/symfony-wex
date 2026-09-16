@@ -50,6 +50,20 @@ final readonly class WorkdirDataReader
     }
 
     /**
+     * Where the record of that kind bearing that identity sits.
+     *
+     * Written once because both ends compose it: whoever opens a record and
+     * whoever is told to read one again have to land on the same file.
+     */
+    public function recordPath(
+        string $path,
+        string $kind,
+        string $identity,
+    ): string {
+        return $this->directory($path, $kind).'/'.$identity.'.'.self::FILE_EXTENSION;
+    }
+
+    /**
      * Which app a record belongs to, read backwards off its own file.
      *
      * A record sits at `<app>/.wex/data/<kind>/<name>.yml`, and nothing inside
