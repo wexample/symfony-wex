@@ -12,6 +12,7 @@ use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyLive\Attribute\LiveEntity;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
+use Wexample\SymfonyLive\Interface\LivePublishedWithParentInterface;
 use Wexample\SymfonyWex\Repository\ProcessRunRepository;
 
 /**
@@ -30,11 +31,11 @@ use Wexample\SymfonyWex\Repository\ProcessRunRepository;
 #[ApiEntity]
 // A run is the one row here that moves on its own: whoever is watching it is
 // told, rather than having to ask again.
-#[LiveEntity(actions: [LiveTopicAction::UPDATE])]
+#[LiveEntity(actions: [LiveTopicAction::CREATE, LiveTopicAction::UPDATE])]
 #[PseudocodeExport(inherited: true)]
 #[ORM\Entity(repositoryClass: ProcessRunRepository::class)]
 #[ORM\Table(name: 'process_run')]
-class ProcessRun extends AbstractEntity
+class ProcessRun extends AbstractEntity implements LivePublishedWithParentInterface
 {
     /** Asked for, and waiting for a worker to pick it up. */
     public const string STATE_PENDING = 'pending';
@@ -117,6 +118,15 @@ class ProcessRun extends AbstractEntity
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    /**
+     * A run is published on its process as well as on itself, so a table of the
+     * runs of a process is told about one that did not exist when it was drawn.
+     */
+    public function getLiveParents(): array
+    {
+        return array_filter([$this->getProcess()]);
     }
 
     public function getProcess(): ?Process

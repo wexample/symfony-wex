@@ -1,0 +1,331 @@
+{
+    "name": "process_run",
+    "type": "class",
+    "description": "One execution of a process: when it was asked for, how far it got, what it found.\nIt is a record on disk like everything else here, and for a reason that is not\nsymmetry: wex is what executes, and wex has no database. Writing the run in the\napp's own `.wex\/data\/process_run\/` is what lets a process run on a repository\nthat has no board at all, and what makes the demand survive a broker that falls\nover. The row is a projection of that file, and the file is gitignored: a\nprocess is a declaration worth committing, a run is a dated fact that is not.\nBoth ends write it — the board opens it, wex fills it in as it works — which is\nwhy the two of them are never interested in the same fields at the same time.",
+    "properties": [
+        {
+            "name": "id",
+            "type": "Symfony\\Component\\Uid\\Uuid"
+        },
+        {
+            "name": "path",
+            "type": "string"
+        },
+        {
+            "name": "process",
+            "type": "Process",
+            "nullable": true,
+            "default": null
+        },
+        {
+            "name": "state",
+            "type": "string",
+            "default": null
+        },
+        {
+            "name": "itemsTotal",
+            "type": "int",
+            "nullable": true,
+            "default": null
+        },
+        {
+            "name": "itemsDone",
+            "type": "int",
+            "default": 0
+        },
+        {
+            "name": "data",
+            "type": "string",
+            "default": ""
+        },
+        {
+            "name": "dateCreated",
+            "type": "DateTimeInterface",
+            "nullable": true,
+            "default": null
+        },
+        {
+            "name": "dateStarted",
+            "type": "DateTimeInterface",
+            "nullable": true,
+            "default": null
+        },
+        {
+            "name": "dateEnded",
+            "type": "DateTimeInterface",
+            "nullable": true,
+            "default": null
+        }
+    ],
+    "methods": [
+        {
+            "type": "method",
+            "name": "buildEntityPath",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "className"
+                }
+            ],
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityKeyName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getEntityShortName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getId",
+            "return": {
+                "type": "Symfony\\Component\\Uid\\Uuid"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setId",
+            "parameters": [
+                {
+                    "type": "Symfony\\Component\\Uid\\Uuid",
+                    "name": "id"
+                }
+            ],
+            "return": {
+                "type": "void"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getTableizedName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getCamelName",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "__construct",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "path"
+                }
+            ]
+        },
+        {
+            "type": "method",
+            "name": "idFor",
+            "description": "The identity the run is named by, read straight off the file name.",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "path"
+                }
+            ],
+            "return": {
+                "type": "Uuid"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getPath",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getLiveParents",
+            "description": "A run is published on its process as well as on itself, so a table of the\nruns of a process is told about one that did not exist when it was drawn.",
+            "return": {
+                "type": "array"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getProcess",
+            "return": {
+                "type": "Process"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setProcess",
+            "parameters": [
+                {
+                    "type": "Process",
+                    "name": "process"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getState",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setState",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "state"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getItemsTotal",
+            "return": {
+                "type": "int"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setItemsTotal",
+            "parameters": [
+                {
+                    "type": "int",
+                    "name": "itemsTotal"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getItemsDone",
+            "return": {
+                "type": "int"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setItemsDone",
+            "parameters": [
+                {
+                    "type": "int",
+                    "name": "itemsDone"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getData",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setData",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "data"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getDataValues",
+            "description": "What the run produced, as the values it stands for.",
+            "return": {
+                "type": "array",
+                "description": "mixed>"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getDateCreated",
+            "return": {
+                "type": "DateTimeInterface"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setDateCreated",
+            "parameters": [
+                {
+                    "type": "DateTimeInterface",
+                    "name": "dateCreated"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getDateStarted",
+            "return": {
+                "type": "DateTimeInterface"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setDateStarted",
+            "parameters": [
+                {
+                    "type": "DateTimeInterface",
+                    "name": "dateStarted"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getDateEnded",
+            "return": {
+                "type": "DateTimeInterface"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setDateEnded",
+            "parameters": [
+                {
+                    "type": "DateTimeInterface",
+                    "name": "dateEnded"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        }
+    ]
+}

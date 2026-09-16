@@ -2,6 +2,7 @@
 
 namespace Wexample\SymfonyWex\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
 use Wexample\SymfonyWex\Entity\Process;
 use Wexample\SymfonyWex\Entity\ProcessRun;
@@ -36,9 +37,21 @@ class ProcessRunRepository extends AbstractRepository
      */
     public function findByProcess(Process $process): array
     {
-        return $this->findBy(
-            ['process' => $process],
-            ['dateCreated' => self::SORT_DESC]
-        );
+        return $this->queryByProcess($process)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * The same, left open: what a listing reads a page at a time.
+     */
+    public function queryByProcess(Process $process): QueryBuilder
+    {
+        $alias = $this->getEntityQueryAlias();
+
+        return $this->createQueryBuilder($alias)
+            ->where($this->queryField('process').' = :process')
+            ->setParameter('process', $process)
+            ->orderBy($alias.'.dateCreated', self::SORT_DESC);
     }
 }

@@ -11,6 +11,8 @@ use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyForms\Attribute\EntityForm;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
+use Wexample\SymfonyLive\Attribute\LiveEntity;
+use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyHelpers\Entity\Traits\HasTitleTrait;
 use Wexample\SymfonyWex\Repository\ProcessRepository;
 
@@ -30,6 +32,9 @@ use Wexample\SymfonyWex\Repository\ProcessRepository;
 #[EntityForm]
 #[ORM\Entity(repositoryClass: ProcessRepository::class)]
 #[ORM\Table(name: 'process')]
+// Subscribable because its runs publish on it: a table of them listens to the
+// process and hears about a run that did not exist when the page was drawn.
+#[LiveEntity(actions: [LiveTopicAction::CREATE, LiveTopicAction::UPDATE])]
 class Process extends AbstractEntity
 {
     use HasTitleTrait;
