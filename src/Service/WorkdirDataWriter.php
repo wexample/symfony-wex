@@ -44,6 +44,12 @@ final readonly class WorkdirDataWriter
                 2
             )
         );
+
+        // A run record is written from both ends — the board web opens it as
+        // root, a worker fills it in as its own user — over a bind mount they
+        // share no uid on. Left at the creator's default, the second writer
+        // cannot touch what the first made; world-writable, either one can.
+        $this->filesystem->chmod($file, 0666);
     }
 
     /**
