@@ -13,14 +13,14 @@ use Wexample\SymfonyWex\Entity\Process;
 use Wexample\SymfonyWex\Entity\Selection;
 use Wexample\SymfonyWex\Form\Type\ProcessTypeChoiceType;
 use Wexample\SymfonyWex\Form\Type\SelectionChoiceType;
+use Wexample\SymfonyWex\Repository\ProcessTypeRepository;
 use Wexample\SymfonyWex\Repository\SelectionRepository;
-use Wexample\SymfonyWex\Service\ProcessTypeRegistry;
 
 class ProcessForm extends AbstractForm
 {
     public function __construct(
         private readonly SelectionRepository $selections,
-        private readonly ProcessTypeRegistry $types,
+        private readonly ProcessTypeRepository $types,
     ) {
     }
 
@@ -99,7 +99,7 @@ class ProcessForm extends AbstractForm
     /**
      * The treatments to choose from, the one already named among them.
      *
-     * A bundle can be removed while a process still names what it brought: the
+     * An addon can leave while a process still names what it brought: the
      * choice is kept so the process stays editable, rather than answering with
      * a field refusing the value it holds.
      *
@@ -107,7 +107,11 @@ class ProcessForm extends AbstractForm
      */
     private function typeChoices(string $current): array
     {
-        $choices = $this->types->choices();
+        $choices = [];
+
+        foreach ($this->types->findAllByName() as $processType) {
+            $choices[$processType->getLabel()] = $processType->getName();
+        }
 
         if ('' !== $current && ! in_array($current, $choices, true)) {
             $choices[$current] = $current;

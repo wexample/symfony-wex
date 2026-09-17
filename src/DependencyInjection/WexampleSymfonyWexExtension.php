@@ -4,7 +4,6 @@ namespace Wexample\SymfonyWex\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Wexample\SymfonyHelpers\DependencyInjection\AbstractWexampleSymfonyExtension;
-use Wexample\SymfonyWex\Process\ProcessTypeInterface;
 
 class WexampleSymfonyWexExtension extends AbstractWexampleSymfonyExtension
 {
@@ -16,13 +15,6 @@ class WexampleSymfonyWexExtension extends AbstractWexampleSymfonyExtension
             __DIR__,
             $container
         );
-
-        // Said here rather than by an attribute on the interface: an attribute
-        // is only read on classes the service globs walk, so a contract nobody
-        // instantiates would carry a tag nothing ever applies.
-        $container
-            ->registerForAutoconfiguration(ProcessTypeInterface::class)
-            ->addTag(ProcessTypeInterface::TAG);
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
