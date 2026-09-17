@@ -5,7 +5,6 @@ namespace Wexample\SymfonyWex\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Wexample\SymfonyForms\Form\Type\SelectInputType;
-use Wexample\SymfonyWex\Entity\ProcessType;
 use Wexample\SymfonyWex\Repository\ProcessTypeRepository;
 
 /**

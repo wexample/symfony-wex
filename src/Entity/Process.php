@@ -11,9 +11,9 @@ use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyForms\Attribute\EntityForm;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
+use Wexample\SymfonyHelpers\Entity\Traits\HasTitleTrait;
 use Wexample\SymfonyLive\Attribute\LiveEntity;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
-use Wexample\SymfonyHelpers\Entity\Traits\HasTitleTrait;
 use Wexample\SymfonyWex\Repository\ProcessRepository;
 
 /**
