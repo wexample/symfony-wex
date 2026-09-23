@@ -41,7 +41,8 @@ class ProcessFormProcessor extends AbstractFormProcessor
             ProcessHydrator::KEY_TITLE => $process->getTitle(),
             ProcessHydrator::KEY_TYPE => $process->getType(),
             ProcessHydrator::KEY_SELECTION_ID => $process->getSelection()?->getId()->toRfc4122(),
-            ProcessHydrator::KEY_OPTIONS => $process->getOptions(),
+            // The form edits a YAML block; the record holds the values it stands for.
+            ProcessHydrator::KEY_OPTIONS => $process->getOptionValues(),
         ]);
 
         $this->projector->projectOne($process);

@@ -26,6 +26,10 @@ final readonly class WorkdirDataWriter
      * fills, fields nothing reads yet — so it is read, merged and dumped rather
      * than rebuilt.
      *
+     * Merged on the first level only, as wex merges: a field given here is the
+     * whole field. A nested value merged key by key would keep an option the
+     * form just removed.
+     *
      * @param string               $file   the record, as the reader named it
      * @param array<string, mixed> $values the fields to put in it
      */
@@ -36,7 +40,7 @@ final readonly class WorkdirDataWriter
         $this->filesystem->dumpFile(
             $file,
             WorkdirDataReader::encode(
-                array_replace_recursive($this->parse($file), $values)
+                array_replace($this->parse($file), $values)
             )
         );
 
