@@ -3,7 +3,6 @@
 namespace Wexample\SymfonyWex\Service;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Writes back a record of `.wex/data`, the counterpart of `WorkdirDataReader`.
@@ -36,12 +35,8 @@ final readonly class WorkdirDataWriter
     ): void {
         $this->filesystem->dumpFile(
             $file,
-            // Two spaces, like every `.wex` file wex writes itself: a rewrite
-            // that reindents the whole file reads as a change nobody made.
-            Yaml::dump(
-                array_replace_recursive($this->parse($file), $values),
-                4,
-                2
+            WorkdirDataReader::encode(
+                array_replace_recursive($this->parse($file), $values)
             )
         );
 
@@ -91,6 +86,8 @@ final readonly class WorkdirDataWriter
      */
     private function parse(string $file): array
     {
-        return is_file($file) ? Yaml::parseFile($file) ?? [] : [];
+        return is_file($file)
+            ? WorkdirDataReader::decode((string) file_get_contents($file))
+            : [];
     }
 }

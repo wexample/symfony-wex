@@ -43,7 +43,7 @@ final readonly class ProcessRunHydrator
             ->setState((string) ($values[self::KEY_STATE] ?? ProcessRun::STATE_PENDING))
             ->setItemsTotal(isset($values[self::KEY_ITEMS_TOTAL]) ? (int) $values[self::KEY_ITEMS_TOTAL] : null)
             ->setItemsDone((int) ($values[self::KEY_ITEMS_DONE] ?? 0))
-            ->setData((string) ($values[self::KEY_DATA] ?? ''))
+            ->setData($this->data($values[self::KEY_DATA] ?? null))
             ->setDateCreated($this->date($values[self::KEY_DATE_CREATED] ?? null))
             ->setDateStarted($this->date($values[self::KEY_DATE_STARTED] ?? null))
             ->setDateEnded($this->date($values[self::KEY_DATE_ENDED] ?? null));
@@ -59,7 +59,7 @@ final readonly class ProcessRunHydrator
             self::KEY_STATE => $run->getState(),
             self::KEY_ITEMS_TOTAL => $run->getItemsTotal(),
             self::KEY_ITEMS_DONE => $run->getItemsDone(),
-            self::KEY_DATA => $run->getData(),
+            self::KEY_DATA => $run->getDataValues(),
             self::KEY_DATE_CREATED => $run->getDateCreated()?->format(DATE_ATOM),
             self::KEY_DATE_STARTED => $run->getDateStarted()?->format(DATE_ATOM),
             self::KEY_DATE_ENDED => $run->getDateEnded()?->format(DATE_ATOM),
@@ -75,6 +75,21 @@ final readonly class ProcessRunHydrator
         return $id && Uuid::isValid($id)
             ? $this->processes->find(Uuid::fromString($id))
             : null;
+    }
+
+    /**
+     * The result as the column holds it: the JSON text of the values.
+     *
+     * Nested in the record since records are JSON; a string is still taken as
+     * it is, which is what a record written before that looks like.
+     */
+    private function data(mixed $data): string
+    {
+        if (is_array($data)) {
+            return [] === $data ? '' : rtrim(WorkdirDataReader::encode($data));
+        }
+
+        return (string) ($data ?? '');
     }
 
     private function date(?string $value): ?DateTime

@@ -17,7 +17,7 @@ use Wexample\SymfonyWex\Repository\SelectionRepository;
  * A subset of the files of an app, said by the patterns that match it.
  *
  * A selection travels with the project it describes, so it is declared in a
- * record — `.wex/data/selection/<uuid>.yml` — and this row is rebuilt from that
+ * record — `.wex/data/selection/<uuid>.json` — and this row is rebuilt from that
  * file and never written back to it. The declaration is named by its own
  * identity, so a selection retitled stays the same selection.
  *

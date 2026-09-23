@@ -6,7 +6,6 @@ use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Yaml\Yaml;
 use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
@@ -84,6 +83,10 @@ class ProcessRun extends AbstractEntity implements LivePublishedWithParentInterf
      * A block and not columns, like the options it answers: what a result means
      * is the type's business, and a shape agreed here would be a shape every
      * type has to fit.
+     *
+     * Held as the JSON text of the values, nested in the record as values: a
+     * page reading a run is handed this string and parses it, which is what it
+     * could not do while it was YAML.
      */
     #[ORM\Column(type: Types::TEXT)]
     protected string $data = '';
@@ -196,7 +199,13 @@ class ProcessRun extends AbstractEntity implements LivePublishedWithParentInterf
      */
     public function getDataValues(): array
     {
-        return Yaml::parse($this->data) ?? [];
+        // A row projected before the records were JSON holds YAML here, and
+        // reads as nothing until the next sync rewrites it.
+        try {
+            return (array) (json_decode($this->data, true, flags: JSON_THROW_ON_ERROR) ?? []);
+        } catch (\JsonException) {
+            return [];
+        }
     }
 
     public function getDateCreated(): ?DateTimeInterface

@@ -4,6 +4,7 @@ namespace Wexample\SymfonyWex\Service;
 
 use DateTime;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Yaml\Yaml;
 use Wexample\SymfonyWex\Entity\Process;
 use Wexample\SymfonyWex\Entity\Selection;
 use Wexample\SymfonyWex\Repository\SelectionRepository;
@@ -38,7 +39,7 @@ final readonly class ProcessHydrator
             ->setTitle($values[self::KEY_TITLE] ?? null)
             ->setType((string) ($values[self::KEY_TYPE] ?? ''))
             ->setSelection($this->selection($values[self::KEY_SELECTION_ID] ?? null))
-            ->setOptions((string) ($values[self::KEY_OPTIONS] ?? ''))
+            ->setOptions($this->options($values[self::KEY_OPTIONS] ?? null))
             ->setDateCreated(
                 isset($values[self::KEY_DATE_CREATED])
                     ? new DateTime($values[self::KEY_DATE_CREATED])
@@ -69,5 +70,20 @@ final readonly class ProcessHydrator
         return $id && Uuid::isValid($id)
             ? $this->selections->find(Uuid::fromString($id))
             : null;
+    }
+
+    /**
+     * The options as the form edits them: a YAML block, typed by hand.
+     *
+     * A record holds that block as a string. One that nests the options as
+     * values is taken too, and written back as the block they stand for.
+     */
+    private function options(mixed $options): string
+    {
+        if (is_array($options)) {
+            return [] === $options ? '' : Yaml::dump($options);
+        }
+
+        return (string) ($options ?? '');
     }
 }

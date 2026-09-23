@@ -24,7 +24,7 @@ use Wexample\SymfonyWex\Repository\ProcessRepository;
  * starts one, and none of this row's business.
  *
  * Like a selection, it travels with the project it describes: it is declared in
- * `.wex/data/process/<uuid>.yml`, and this row is rebuilt from that file and
+ * `.wex/data/process/<uuid>.json`, and this row is rebuilt from that file and
  * never written back to it.
  */
 #[ApiEntity]
