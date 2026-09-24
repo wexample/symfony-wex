@@ -125,7 +125,7 @@ class ProcessForm extends AbstractForm
         $choices = [];
 
         foreach ($this->types->findAllByName() as $processType) {
-            $choices[$processType->getLabel()] = $processType->getName();
+            $choices[ProcessTypeChoiceType::label($processType)] = $processType->getName();
         }
 
         if ('' !== $current && ! in_array($current, $choices, true)) {
