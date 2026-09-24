@@ -18,7 +18,7 @@ class ProcessDto extends AbstractEntityDto
     /** What the type is told, as it was written. */
     public string $options;
 
-    /** How much what it finds matters: `warning` or `error`. */
+    /** What what it finds means: `info`, `success`, `warning` or `error`. */
     public string $severity;
 
     public string $path;

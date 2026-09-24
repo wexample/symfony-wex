@@ -10,8 +10,12 @@ field:
     help: The files the process runs on.
   severity:
     label: Severity
-    help: How much what it finds matters.
+    help: What what it finds means — not every process looks for faults.
     choice:
+      info:
+        label: Info — worth knowing, neither good nor bad
+      success:
+        label: Success — good news
       warning:
         label: Warning — to look at, holds nothing up
       error:

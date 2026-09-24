@@ -38,6 +38,12 @@ class Process extends AbstractEntity
 {
     use HasTitleTrait;
 
+    /** What it finds is worth knowing, neither good nor bad. */
+    public const string SEVERITY_INFO = 'info';
+
+    /** What it finds is good news: a process is not bound to look for faults. */
+    public const string SEVERITY_SUCCESS = 'success';
+
     /** What it finds is to be looked at, and holds nothing up. */
     public const string SEVERITY_WARNING = 'warning';
 
@@ -45,6 +51,8 @@ class Process extends AbstractEntity
     public const string SEVERITY_ERROR = 'error';
 
     public const array SEVERITIES = [
+        self::SEVERITY_INFO,
+        self::SEVERITY_SUCCESS,
         self::SEVERITY_WARNING,
         self::SEVERITY_ERROR,
     ];
