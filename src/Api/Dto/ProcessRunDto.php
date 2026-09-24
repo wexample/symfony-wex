@@ -18,6 +18,9 @@ class ProcessRunDto extends AbstractEntityDto
 
     public int $itemsDone;
 
+    /** The file the run is on, or the one it failed on. */
+    public ?string $current;
+
     /** What the run produced, as the type chose to write it. */
     public string $data;
 
@@ -40,6 +43,7 @@ class ProcessRunDto extends AbstractEntityDto
         $dto->state = $entity->getState();
         $dto->itemsTotal = $entity->getItemsTotal();
         $dto->itemsDone = $entity->getItemsDone();
+        $dto->current = $entity->getCurrent();
         $dto->data = $entity->getData();
         $dto->path = $entity->getPath();
         $dto->dateCreated = $entity->getDateCreated()?->format(DATE_ATOM);

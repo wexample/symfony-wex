@@ -17,6 +17,7 @@ use Wexample\SymfonyWex\Repository\ProcessRepository;
  */
 final readonly class ProcessRunHydrator
 {
+    public const KEY_CURRENT = 'current';
     public const KEY_DATA = 'data';
     public const KEY_DATE_CREATED = 'date_created';
     public const KEY_DATE_ENDED = 'date_ended';
@@ -43,6 +44,7 @@ final readonly class ProcessRunHydrator
             ->setState((string) ($values[self::KEY_STATE] ?? ProcessRun::STATE_PENDING))
             ->setItemsTotal(isset($values[self::KEY_ITEMS_TOTAL]) ? (int) $values[self::KEY_ITEMS_TOTAL] : null)
             ->setItemsDone((int) ($values[self::KEY_ITEMS_DONE] ?? 0))
+            ->setCurrent(isset($values[self::KEY_CURRENT]) ? (string) $values[self::KEY_CURRENT] : null)
             ->setData($this->data($values[self::KEY_DATA] ?? null))
             ->setDateCreated($this->date($values[self::KEY_DATE_CREATED] ?? null))
             ->setDateStarted($this->date($values[self::KEY_DATE_STARTED] ?? null))
@@ -59,6 +61,7 @@ final readonly class ProcessRunHydrator
             self::KEY_STATE => $run->getState(),
             self::KEY_ITEMS_TOTAL => $run->getItemsTotal(),
             self::KEY_ITEMS_DONE => $run->getItemsDone(),
+            self::KEY_CURRENT => $run->getCurrent(),
             self::KEY_DATA => $run->getDataValues(),
             self::KEY_DATE_CREATED => $run->getDateCreated()?->format(DATE_ATOM),
             self::KEY_DATE_STARTED => $run->getDateStarted()?->format(DATE_ATOM),

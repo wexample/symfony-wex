@@ -1,7 +1,7 @@
 items:
   - name: Selection
     type: class
-    description: "A subset of the files of an app, said by the patterns that match it.\nA selection travels with the project it describes, so it is declared in a\nrecord — `.wex/data/selection/<uuid>.yml` — and this row is rebuilt from that\nfile and never written back to it. The declaration is named by its own\nidentity, so a selection retitled stays the same selection.\nWhat it selects is not decided here: the patterns are held as they were\nwritten, and whoever walks a tree reads them."
+    description: "A subset of the files of an app, said by the patterns that match it.\nA selection travels with the project it describes, so it is declared in a\nrecord — `.wex/data/selection/<uuid>.json` — and this row is rebuilt from that\nfile and never written back to it. The declaration is named by its own\nidentity, so a selection retitled stays the same selection.\nWhat it selects is not decided here: the patterns are held as they were\nwritten, and whoever walks a tree reads them."
     properties:
       - name: title
         type: string

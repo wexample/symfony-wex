@@ -34,6 +34,12 @@
             "default": 0
         },
         {
+            "name": "current",
+            "type": "string",
+            "nullable": true,
+            "default": null
+        },
+        {
             "name": "data",
             "type": "string",
             "default": ""
@@ -232,6 +238,26 @@
                 {
                     "type": "int",
                     "name": "itemsDone"
+                }
+            ],
+            "return": {
+                "type": "self"
+            }
+        },
+        {
+            "type": "method",
+            "name": "getCurrent",
+            "return": {
+                "type": "string"
+            }
+        },
+        {
+            "type": "method",
+            "name": "setCurrent",
+            "parameters": [
+                {
+                    "type": "string",
+                    "name": "current"
                 }
             ],
             "return": {

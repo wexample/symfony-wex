@@ -78,6 +78,16 @@ class ProcessRun extends AbstractEntity implements LivePublishedWithParentInterf
     protected int $itemsDone = 0;
 
     /**
+     * The file the run is on, relative to the app.
+     *
+     * Null before the first file and once the run has come to its end; a run
+     * that failed keeps the one it failed on, which is what whoever reads it
+     * wants to know.
+     */
+    #[ORM\Column(type: Types::STRING, length: 1024, nullable: true)]
+    protected ?string $current = null;
+
+    /**
      * What the run produced, as the type chose to write it.
      *
      * A block and not columns, like the options it answers: what a result means
@@ -176,6 +186,18 @@ class ProcessRun extends AbstractEntity implements LivePublishedWithParentInterf
     public function setItemsDone(int $itemsDone): self
     {
         $this->itemsDone = $itemsDone;
+
+        return $this;
+    }
+
+    public function getCurrent(): ?string
+    {
+        return $this->current;
+    }
+
+    public function setCurrent(?string $current): self
+    {
+        $this->current = $current;
 
         return $this;
     }
