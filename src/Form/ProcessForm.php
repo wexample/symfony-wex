@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Json;
 use Wexample\SymfonyForms\Form\AbstractForm;
 use Wexample\SymfonyForms\Form\Type\TextareaInputType;
 use Wexample\SymfonyForms\Form\Type\TextInputType;
@@ -57,6 +58,9 @@ class ProcessForm extends AbstractForm
                     // Left empty, the field submits null; the entity says an
                     // absence of options as an empty block, so the form does too.
                     'empty_data' => '',
+                    // Refused here rather than read as nothing: a typo would
+                    // otherwise run the process with no options at all.
+                    'constraints' => [new Json()],
                 ]
             );
 

@@ -4,7 +4,6 @@ namespace Wexample\SymfonyWex\Service;
 
 use DateTime;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Yaml\Yaml;
 use Wexample\SymfonyWex\Entity\Process;
 use Wexample\SymfonyWex\Entity\Selection;
 use Wexample\SymfonyWex\Repository\SelectionRepository;
@@ -56,7 +55,7 @@ final readonly class ProcessHydrator
             self::KEY_TITLE => $process->getTitle(),
             self::KEY_TYPE => $process->getType(),
             self::KEY_SELECTION_ID => $process->getSelection()?->getId()->toRfc4122(),
-            self::KEY_OPTIONS => $process->getOptions(),
+            self::KEY_OPTIONS => $process->getOptionValues(),
             self::KEY_DATE_CREATED => $process->getDateCreated()?->format(DATE_ATOM),
         ];
     }
@@ -73,15 +72,15 @@ final readonly class ProcessHydrator
     }
 
     /**
-     * The options as the form edits them: a YAML block, typed by hand.
+     * The options as the column holds them and the form edits them: the JSON
+     * text of the values the record nests, indented to be read and typed.
      *
-     * A record holds that block as a string. One that nests the options as
-     * values is taken too, and written back as the block they stand for.
+     * No options is no text, which is what an empty field submits.
      */
     private function options(mixed $options): string
     {
         if (is_array($options)) {
-            return [] === $options ? '' : Yaml::dump($options);
+            return [] === $options ? '' : rtrim(WorkdirDataReader::encode($options));
         }
 
         return (string) ($options ?? '');

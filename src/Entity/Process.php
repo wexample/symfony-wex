@@ -6,7 +6,6 @@ use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Yaml\Yaml;
 use Wexample\Pseudocode\Attribute\PseudocodeExport;
 use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyForms\Attribute\EntityForm;
@@ -72,6 +71,10 @@ class Process extends AbstractEntity
      * Held as a block and not as columns for the same reason the type is a name:
      * what an option means is the type's business, and a shape agreed here would
      * be a shape every type has to fit.
+     *
+     * The JSON text of the values the record nests: the same format as the
+     * record itself, and the one the form edits, so nothing is translated on
+     * the way between the three.
      */
     #[ORM\Column(type: Types::TEXT)]
     protected string $options = '';
@@ -143,7 +146,13 @@ class Process extends AbstractEntity
      */
     public function getOptionValues(): array
     {
-        return Yaml::parse($this->options) ?? [];
+        // A row projected while options were YAML reads as none, until the
+        // next sync rewrites it from its record.
+        try {
+            return (array) (json_decode($this->options, true, flags: JSON_THROW_ON_ERROR) ?? []);
+        } catch (\JsonException) {
+            return [];
+        }
     }
 
     public function getDateCreated(): ?DateTimeInterface
