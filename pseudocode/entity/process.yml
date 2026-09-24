@@ -21,6 +21,9 @@ items:
       - name: options
         type: string
         default: ''
+      - name: severity
+        type: string
+        default: null
       - name: dateCreated
         type: DateTimeInterface
         nullable: true
@@ -127,6 +130,17 @@ items:
         return:
           type: array
           description: mixed>
+      - type: method
+        name: getSeverity
+        return:
+          type: string
+      - type: method
+        name: setSeverity
+        parameters:
+          - type: string
+            name: severity
+        return:
+          type: self
       - type: method
         name: getDateCreated
         return:

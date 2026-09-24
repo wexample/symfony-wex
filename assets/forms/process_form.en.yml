@@ -8,6 +8,14 @@ field:
   selection:
     label: Selection
     help: The files the process runs on.
+  severity:
+    label: Severity
+    help: How much what it finds matters.
+    choice:
+      warning:
+        label: Warning — to look at, holds nothing up
+      error:
+        label: Error — to fix before going on
   options:
     label: Options
     help: 'What the type is told, as a JSON object — {"mode": "644"}. What the keys mean is the type''s own business.'

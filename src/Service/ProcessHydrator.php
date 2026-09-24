@@ -19,6 +19,7 @@ final readonly class ProcessHydrator
     public const KEY_DATE_CREATED = 'date_created';
     public const KEY_OPTIONS = 'options';
     public const KEY_SELECTION_ID = 'selection_id';
+    public const KEY_SEVERITY = 'severity';
     public const KEY_TITLE = 'title';
     public const KEY_TYPE = 'type';
 
@@ -39,6 +40,7 @@ final readonly class ProcessHydrator
             ->setType((string) ($values[self::KEY_TYPE] ?? ''))
             ->setSelection($this->selection($values[self::KEY_SELECTION_ID] ?? null))
             ->setOptions($this->options($values[self::KEY_OPTIONS] ?? null))
+            ->setSeverity($this->severity($values[self::KEY_SEVERITY] ?? null))
             ->setDateCreated(
                 isset($values[self::KEY_DATE_CREATED])
                     ? new DateTime($values[self::KEY_DATE_CREATED])
@@ -56,6 +58,7 @@ final readonly class ProcessHydrator
             self::KEY_TYPE => $process->getType(),
             self::KEY_SELECTION_ID => $process->getSelection()?->getId()->toRfc4122(),
             self::KEY_OPTIONS => $process->getOptionValues(),
+            self::KEY_SEVERITY => $process->getSeverity(),
             self::KEY_DATE_CREATED => $process->getDateCreated()?->format(DATE_ATOM),
         ];
     }
@@ -77,6 +80,17 @@ final readonly class ProcessHydrator
      *
      * No options is no text, which is what an empty field submits.
      */
+    /**
+     * A warning unless the record says otherwise: a process declared before
+     * severities existed, or naming one that does not, holds nothing up.
+     */
+    private function severity(mixed $severity): string
+    {
+        return in_array($severity, Process::SEVERITIES, true)
+            ? $severity
+            : Process::SEVERITY_WARNING;
+    }
+
     private function options(mixed $options): string
     {
         if (is_array($options)) {

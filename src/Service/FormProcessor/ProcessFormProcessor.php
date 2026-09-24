@@ -43,6 +43,7 @@ class ProcessFormProcessor extends AbstractFormProcessor
             ProcessHydrator::KEY_SELECTION_ID => $process->getSelection()?->getId()->toRfc4122(),
             // The form edits JSON text; the record holds the values it stands for.
             ProcessHydrator::KEY_OPTIONS => $process->getOptionValues(),
+            ProcessHydrator::KEY_SEVERITY => $process->getSeverity(),
         ]);
 
         $this->projector->projectOne($process);

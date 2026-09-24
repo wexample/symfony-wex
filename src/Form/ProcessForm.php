@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Json;
 use Wexample\SymfonyForms\Form\AbstractForm;
+use Wexample\SymfonyForms\Form\Type\SelectInputType;
 use Wexample\SymfonyForms\Form\Type\TextareaInputType;
 use Wexample\SymfonyForms\Form\Type\TextInputType;
 use Wexample\SymfonyWex\Entity\Process;
@@ -61,6 +62,16 @@ class ProcessForm extends AbstractForm
                     // Refused here rather than read as nothing: a typo would
                     // otherwise run the process with no options at all.
                     'constraints' => [new Json()],
+                ]
+            )
+            ->add(
+                'severity',
+                SelectInputType::class,
+                [
+                    self::FIELD_OPTION_NAME_LABEL => true,
+                    self::FIELD_OPTION_NAME_REQUIRED => true,
+                    'help' => true,
+                    'choices' => Process::SEVERITIES,
                 ]
             );
 

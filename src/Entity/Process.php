@@ -38,6 +38,17 @@ class Process extends AbstractEntity
 {
     use HasTitleTrait;
 
+    /** What it finds is to be looked at, and holds nothing up. */
+    public const string SEVERITY_WARNING = 'warning';
+
+    /** What it finds is to be fixed before going on. */
+    public const string SEVERITY_ERROR = 'error';
+
+    public const array SEVERITIES = [
+        self::SEVERITY_WARNING,
+        self::SEVERITY_ERROR,
+    ];
+
     /** The file the process is declared in, which is what says the app it belongs to. */
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     protected string $path;
@@ -78,6 +89,17 @@ class Process extends AbstractEntity
      */
     #[ORM\Column(type: Types::TEXT)]
     protected string $options = '';
+
+    /**
+     * How much what it finds matters.
+     *
+     * The process's and not each finding's: a process is one rule over a set of
+     * files, and whether breaking it holds anything up is what declaring it
+     * decides. The board's to read and nobody else's — the worker runs a check
+     * the same whatever hangs on it.
+     */
+    #[ORM\Column(type: Types::STRING, length: 16, options: ['default' => self::SEVERITY_WARNING])]
+    protected string $severity = self::SEVERITY_WARNING;
 
     /** When the declaration was written, which is what tells two apart in a list. */
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -153,6 +175,18 @@ class Process extends AbstractEntity
         } catch (\JsonException) {
             return [];
         }
+    }
+
+    public function getSeverity(): string
+    {
+        return $this->severity;
+    }
+
+    public function setSeverity(string $severity): self
+    {
+        $this->severity = $severity;
+
+        return $this;
     }
 
     public function getDateCreated(): ?DateTimeInterface

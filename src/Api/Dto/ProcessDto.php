@@ -18,6 +18,9 @@ class ProcessDto extends AbstractEntityDto
     /** What the type is told, as it was written. */
     public string $options;
 
+    /** How much what it finds matters: `warning` or `error`. */
+    public string $severity;
+
     public string $path;
 
     public ?string $dateCreated;
@@ -33,6 +36,7 @@ class ProcessDto extends AbstractEntityDto
         $dto->type = $entity->getType();
         $dto->selectionId = $entity->getSelection()?->getId()->toRfc4122();
         $dto->options = $entity->getOptions();
+        $dto->severity = $entity->getSeverity();
         $dto->path = $entity->getPath();
         $dto->dateCreated = $entity->getDateCreated()?->format(DATE_ATOM);
 
