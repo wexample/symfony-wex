@@ -4,6 +4,7 @@ namespace Wexample\SymfonyWex\Repository;
 
 use Symfony\Component\Uid\Uuid;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
+use Wexample\SymfonyWex\Entity\App;
 use Wexample\SymfonyWex\Entity\Process;
 use Wexample\SymfonyWex\Entity\Traits\Manipulator\ProcessEntityManipulatorTrait;
 
@@ -30,37 +31,26 @@ class ProcessRepository extends AbstractRepository
     }
 
     /**
-     * The processes declared under a directory, by title.
+     * The processs of an app, by title.
      *
      * @return Process[]
      */
-    public function findByPathPrefix(string $prefix): array
+    public function findByApp(App $app): array
     {
-        return $this->createQueryBuilder('process')
-            ->where('process.path LIKE :prefix')
-            ->setParameter('prefix', addcslashes($prefix, '%_\\').'/%')
-            ->orderBy('process.title', self::SORT_ASC)
-            ->getQuery()
-            ->getResult();
+        return $this->findBy(['app' => $app], ['title' => self::SORT_ASC]);
     }
 
     /**
-     * One process, on condition that it is declared under that directory.
+     * One process, on condition that it belongs to that app.
      *
      * Asked for this way rather than by identity alone wherever the address
      * names both: a process of another app answering there would be shown, and
      * edited, under a name that does not hold it.
      */
-    public function findByPathPrefixAndId(
-        string $prefix,
+    public function findByAppAndId(
+        App $app,
         Uuid $id,
     ): ?Process {
-        foreach ($this->findByPathPrefix($prefix) as $process) {
-            if ($process->getId()->equals($id)) {
-                return $process;
-            }
-        }
-
-        return null;
+        return $this->findOneBy(['app' => $app, 'id' => $id]);
     }
 }

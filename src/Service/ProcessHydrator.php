@@ -4,8 +4,10 @@ namespace Wexample\SymfonyWex\Service;
 
 use DateTime;
 use Symfony\Component\Uid\Uuid;
+use Wexample\SymfonyWex\Entity\App;
 use Wexample\SymfonyWex\Entity\Process;
 use Wexample\SymfonyWex\Entity\Selection;
+use Wexample\SymfonyWex\Repository\AppRepository;
 use Wexample\SymfonyWex\Repository\SelectionRepository;
 
 /**
@@ -25,6 +27,8 @@ final readonly class ProcessHydrator
 
     public function __construct(
         private SelectionRepository $selections,
+        private AppRepository $apps,
+        private WorkdirDataReader $reader,
     ) {
     }
 
@@ -36,6 +40,8 @@ final readonly class ProcessHydrator
         array $values
     ): Process {
         return $process
+            // Not a value of the record: where the record sits.
+            ->setApp($this->apps->find(App::idFor($this->reader->appPath($process->getPath()))))
             ->setTitle($values[self::KEY_TITLE] ?? null)
             ->setType((string) ($values[self::KEY_TYPE] ?? ''))
             ->setSelection($this->selection($values[self::KEY_SELECTION_ID] ?? null))

@@ -102,7 +102,7 @@ class ProcessForm extends AbstractForm
                         self::FIELD_OPTION_NAME_LABEL => true,
                         self::FIELD_OPTION_NAME_REQUIRED => true,
                         'help' => true,
-                        'choices' => $this->besideRecord($process->getPath()),
+                        'choices' => $this->ofTheSameApp($process),
                     ]
                 );
             }
@@ -136,19 +136,16 @@ class ProcessForm extends AbstractForm
     }
 
     /**
-     * The selections declared beside that record.
-     *
-     * A process and the selections it may run on are records of the same app,
-     * so they are siblings in its `.wex/data` — which is how the app is read
-     * back from a record without being carried along.
+     * The selections of the app the process belongs to: a process runs on the
+     * files of its own app, and nothing else is offered.
      *
      * @return array<string, Selection>
      */
-    private function besideRecord(string $path): array
+    private function ofTheSameApp(Process $process): array
     {
         $selections = [];
 
-        foreach ($this->selections->findByPathPrefix(dirname($path, 2).'/selection') as $selection) {
+        foreach ($process->getApp() ? $this->selections->findByApp($process->getApp()) : [] as $selection) {
             $selections[(string) $selection->getTitle()] = $selection;
         }
 

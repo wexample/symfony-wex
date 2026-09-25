@@ -139,7 +139,7 @@ class ProcessRun extends AbstractEntity implements LivePublishedWithParentInterf
      */
     public function getLiveParents(): array
     {
-        return array_filter([$this->getProcess()]);
+        return array_filter([$this->getProcess(), $this->getProcess()?->getApp()]);
     }
 
     public function getProcess(): ?Process

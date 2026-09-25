@@ -38,6 +38,17 @@ class Selection extends AbstractEntity
     protected string $path;
 
     /**
+     * The app it belongs to, read off where its file sits: the relation says
+     * in the database what the path already said on disk, so an app's rows
+     * are asked for by the app rather than by a prefix of their paths.
+     *
+     * Null for a moment when the app's row is gone before its own.
+     */
+    #[ORM\ManyToOne(targetEntity: App::class)]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    protected ?App $app = null;
+
+    /**
      * The rules, one per line, read in order and in the vocabulary a `.gitignore`
      * uses: a line matches, a line opening on `!` unmatches what the lines above
      * it had taken, `**` crosses directories and `#` opens a comment.
@@ -66,6 +77,18 @@ class Selection extends AbstractEntity
     public static function idFor(string $path): Uuid
     {
         return Uuid::fromString(pathinfo($path, PATHINFO_FILENAME));
+    }
+
+    public function getApp(): ?App
+    {
+        return $this->app;
+    }
+
+    public function setApp(?App $app): self
+    {
+        $this->app = $app;
+
+        return $this;
     }
 
     public function getPath(): string

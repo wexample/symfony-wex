@@ -24,9 +24,10 @@ use Wexample\SymfonyWex\Repository\AppRepository;
 #[ORM\Entity(repositoryClass: AppRepository::class)]
 #[ORM\Table(name: 'app')]
 #[EntityForm]
-// Where its repository stands is told on its topic: every page open on the app
-// shows the branch and what differs from it, and hears when that moves.
-#[LiveEntity(actions: [LiveTopicAction::UPDATE])]
+// Its topic is where a page open on the app hears about all of it: where its
+// repository stands, and what its processes and their runs do — published on
+// their app as well as on themselves, with their own action.
+#[LiveEntity(actions: [LiveTopicAction::CREATE, LiveTopicAction::UPDATE])]
 class App extends AbstractEntity
 {
     use HasDescriptionTrait;

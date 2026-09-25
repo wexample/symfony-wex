@@ -4,6 +4,7 @@ namespace Wexample\SymfonyWex\Repository;
 
 use Symfony\Component\Uid\Uuid;
 use Wexample\SymfonyHelpers\Repository\AbstractRepository;
+use Wexample\SymfonyWex\Entity\App;
 use Wexample\SymfonyWex\Entity\Selection;
 use Wexample\SymfonyWex\Entity\Traits\Manipulator\SelectionEntityManipulatorTrait;
 
@@ -30,43 +31,26 @@ class SelectionRepository extends AbstractRepository
     }
 
     /**
-     * The selections declared under a directory, by title.
-     *
-     * Alphabetical and not by date: this answers a listing and a picker alike,
-     * and somebody looking for one they wrote knows its name, not its age.
-     *
-     * What that directory is stays the caller's business: a selection knows the
-     * file it comes from, and whoever mounted that file knows what it means.
+     * The selections of an app, by title.
      *
      * @return Selection[]
      */
-    public function findByPathPrefix(string $prefix): array
+    public function findByApp(App $app): array
     {
-        return $this->createQueryBuilder('selection')
-            ->where('selection.path LIKE :prefix')
-            ->setParameter('prefix', addcslashes($prefix, '%_\\').'/%')
-            ->orderBy('selection.title', self::SORT_ASC)
-            ->getQuery()
-            ->getResult();
+        return $this->findBy(['app' => $app], ['title' => self::SORT_ASC]);
     }
 
     /**
-     * One selection, on condition that it is declared under that directory.
+     * One selection, on condition that it belongs to that app.
      *
      * Asked for this way rather than by identity alone wherever the address
-     * names both: a selection of another app answering there would be shown,
-     * and edited, under a name that does not hold it.
+     * names both: a selection of another app answering there would be shown, and
+     * edited, under a name that does not hold it.
      */
-    public function findByPathPrefixAndId(
-        string $prefix,
+    public function findByAppAndId(
+        App $app,
         Uuid $id,
     ): ?Selection {
-        foreach ($this->findByPathPrefix($prefix) as $selection) {
-            if ($selection->getId()->equals($id)) {
-                return $selection;
-            }
-        }
-
-        return null;
+        return $this->findOneBy(['app' => $app, 'id' => $id]);
     }
 }

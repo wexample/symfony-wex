@@ -13,6 +13,7 @@ use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Entity\Traits\HasTitleTrait;
 use Wexample\SymfonyLive\Attribute\LiveEntity;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
+use Wexample\SymfonyLive\Interface\LivePublishedWithParentInterface;
 use Wexample\SymfonyWex\Repository\ProcessRepository;
 
 /**
@@ -34,7 +35,7 @@ use Wexample\SymfonyWex\Repository\ProcessRepository;
 // Subscribable because its runs publish on it: a table of them listens to the
 // process and hears about a run that did not exist when the page was drawn.
 #[LiveEntity(actions: [LiveTopicAction::CREATE, LiveTopicAction::UPDATE])]
-class Process extends AbstractEntity
+class Process extends AbstractEntity implements LivePublishedWithParentInterface
 {
     use HasTitleTrait;
 
@@ -60,6 +61,17 @@ class Process extends AbstractEntity
     /** The file the process is declared in, which is what says the app it belongs to. */
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     protected string $path;
+
+    /**
+     * The app it belongs to, read off where its file sits: the relation says
+     * in the database what the path already said on disk, so an app's rows
+     * are asked for by the app rather than by a prefix of their paths.
+     *
+     * Null for a moment when the app's row is gone before its own.
+     */
+    #[ORM\ManyToOne(targetEntity: App::class)]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    protected ?App $app = null;
 
     /**
      * What runs, named and not chosen from a list.
@@ -126,6 +138,27 @@ class Process extends AbstractEntity
     public static function idFor(string $path): Uuid
     {
         return Uuid::fromString(pathinfo($path, PATHINFO_FILENAME));
+    }
+
+    public function getApp(): ?App
+    {
+        return $this->app;
+    }
+
+    public function setApp(?App $app): self
+    {
+        $this->app = $app;
+
+        return $this;
+    }
+
+    /**
+     * A process is published on its app as well as on itself: a page open on
+     * the app hears about everything the app holds on one topic.
+     */
+    public function getLiveParents(): array
+    {
+        return array_filter([$this->getApp()]);
     }
 
     public function getPath(): string

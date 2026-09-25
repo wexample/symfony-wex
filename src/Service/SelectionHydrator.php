@@ -3,7 +3,9 @@
 namespace Wexample\SymfonyWex\Service;
 
 use DateTime;
+use Wexample\SymfonyWex\Entity\App;
 use Wexample\SymfonyWex\Entity\Selection;
+use Wexample\SymfonyWex\Repository\AppRepository;
 
 /**
  * Translates a selection between a plain array and its record, both ways.
@@ -17,6 +19,12 @@ final readonly class SelectionHydrator
     public const KEY_PATTERNS = 'patterns';
     public const KEY_TITLE = 'title';
 
+    public function __construct(
+        private AppRepository $apps,
+        private WorkdirDataReader $reader,
+    ) {
+    }
+
     /**
      * @param array<string, mixed> $values
      */
@@ -25,6 +33,8 @@ final readonly class SelectionHydrator
         array $values
     ): Selection {
         return $selection
+            // Not a value of the record: where the record sits.
+            ->setApp($this->apps->find(App::idFor($this->reader->appPath($selection->getPath()))))
             ->setTitle($values[self::KEY_TITLE] ?? null)
             ->setPatterns((string) ($values[self::KEY_PATTERNS] ?? ''))
             ->setDateCreated(
