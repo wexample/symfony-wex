@@ -10,15 +10,20 @@ use Wexample\SymfonyWex\Repository\ProcessRunRepository;
 /**
  * What a run produced that can be handed back: the files it wrote.
  *
- * Read from the key a type lists them under, `written` — a PDF export fills it,
- * and a type that writes nothing leaves it out. The key is the only thing the
- * board and a type agree on here: what the files are is the type's business,
- * and serving them is the board's.
+ * Read from `artifacts`, which the runner writes from what a type declares
+ * through its context — `{type, path, label}`, the same shape for every type.
+ * A run from before that lists bare paths under `written`, read the same way.
+ * What the files are is the type's business, and serving them is the board's.
  */
 final readonly class ProcessRunArtifacts
 {
-    /** Where a type lists the files it wrote, relative to the app. */
+    /** What the runner lists a run's artifacts under. */
+    public const string KEY_ARTIFACTS = 'artifacts';
+
+    /** Where a type listed the files it wrote before artifacts: bare paths. */
     public const string KEY_WRITTEN = 'written';
+
+    public const string TYPE_FILE = 'file';
 
     /**
      * How many runs back a document's latest artifact is looked for. A process
@@ -34,22 +39,50 @@ final readonly class ProcessRunArtifacts
     }
 
     /**
-     * The files the run wrote, relative to the app, in the order it listed them.
+     * The files the run produced, in the order it listed them, as
+     * `{type, path, label}` with the path relative to the app.
      *
      * Read from the record and not from the row: the row catches up once the
      * board has heard the run end, and a page asking for the file the moment
      * the run is done would otherwise be told there is none.
      *
+     * @return array<int, array{type: string, path: string, label: string|null}>
+     */
+    public function all(ProcessRun $run): array
+    {
+        $record = is_file($run->getPath()) ? $this->reader->read($run->getPath()) : [];
+        $data = (array) ($record[ProcessRunHydrator::KEY_DATA] ?? []);
+
+        if (is_array($data[self::KEY_ARTIFACTS] ?? null)) {
+            return array_values(array_filter(array_map(
+                static fn (mixed $artifact): ?array => is_array($artifact) && is_string($artifact['path'] ?? null)
+                    ? [
+                        'type' => (string) ($artifact['type'] ?? self::TYPE_FILE),
+                        'path' => $artifact['path'],
+                        'label' => isset($artifact['label']) ? (string) $artifact['label'] : null,
+                    ]
+                    : null,
+                $data[self::KEY_ARTIFACTS]
+            )));
+        }
+
+        return array_map(
+            static fn (string $path): array => ['type' => self::TYPE_FILE, 'path' => $path, 'label' => null],
+            array_values(array_filter((array) ($data[self::KEY_WRITTEN] ?? []), is_string(...)))
+        );
+    }
+
+    /**
+     * The paths of the files the run produced, relative to the app.
+     *
      * @return string[]
      */
     public function paths(ProcessRun $run): array
     {
-        $record = is_file($run->getPath()) ? $this->reader->read($run->getPath()) : [];
-
-        return array_values(array_filter(
-            (array) ($record[ProcessRunHydrator::KEY_DATA][self::KEY_WRITTEN] ?? []),
-            is_string(...)
-        ));
+        return array_column(
+            array_filter($this->all($run), static fn (array $artifact): bool => self::TYPE_FILE === $artifact['type']),
+            'path'
+        );
     }
 
     /**
