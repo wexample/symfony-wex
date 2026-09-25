@@ -24,6 +24,12 @@ final readonly class ProcessRunHydrator
      */
     public const KEY_ACTION = 'action';
     /**
+     * Who a commit made by the run is signed by, `Name <email>`. Written by the
+     * board, read by wex; absent, wex signs with an identity of its own.
+     */
+    public const KEY_AUTHOR = 'author';
+
+    /**
      * Whether wex commits what the run changed once it is done. Written by the
      * board, read by wex; after the run, what was committed.
      */
