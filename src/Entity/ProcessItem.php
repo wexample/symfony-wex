@@ -63,9 +63,10 @@ class ProcessItem extends AbstractEntity
     protected string $state = self::STATE_FAULT;
 
     /**
-     * What the last check said of it, as the JSON text of its verdicts. Kept
-     * while a run goes through the file, so a run that ends without checking
-     * leaves the file where it was.
+     * What the last check said of it, as the JSON text of its verdicts: `[]`
+     * when it found nothing, empty when no check said anything yet. Kept while
+     * a run goes through the file, so a run that ends without checking leaves
+     * the file where it was.
      */
     #[ORM\Column(type: Types::TEXT)]
     protected string $verdicts = '';
