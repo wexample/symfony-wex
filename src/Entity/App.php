@@ -9,6 +9,8 @@ use Wexample\SymfonyForms\Attribute\EntityForm;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Entity\Traits\HasDescriptionTrait;
 use Wexample\SymfonyHelpers\Entity\Traits\HasNameTrait;
+use Wexample\SymfonyLive\Attribute\LiveEntity;
+use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyWex\Repository\AppRepository;
 
 /**
@@ -22,6 +24,9 @@ use Wexample\SymfonyWex\Repository\AppRepository;
 #[ORM\Entity(repositoryClass: AppRepository::class)]
 #[ORM\Table(name: 'app')]
 #[EntityForm]
+// Where its repository stands is told on its topic: every page open on the app
+// shows the branch and what differs from it, and hears when that moves.
+#[LiveEntity(actions: [LiveTopicAction::UPDATE])]
 class App extends AbstractEntity
 {
     use HasDescriptionTrait;
