@@ -23,6 +23,11 @@ final readonly class ProcessRunHydrator
      * wex; absent, the process's own.
      */
     public const KEY_ACTION = 'action';
+    /**
+     * Whether wex commits what the run changed once it is done. Written by the
+     * board, read by wex; after the run, what was committed.
+     */
+    public const KEY_COMMIT = 'commit';
     public const KEY_CURRENT = 'current';
     public const KEY_DATA = 'data';
     public const KEY_DATE_CREATED = 'date_created';
