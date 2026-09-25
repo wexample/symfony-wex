@@ -1,0 +1,157 @@
+items:
+  - name: ProcessItem
+    type: class
+    description: "Where one file stands for one process, now.\nA run is a dated fact; this is the state the facts add up to. It is what the\npage of a process lists and what the app's home sums up: a fix on one file\nmoves that file and leaves the others where the last check put them, where\nreading the last run alone would forget them all.\nOnly the files that are not fine have a row. A check lists the files it\nfound at fault and counts the others without naming them, so « fine » is\nthe absence of a row rather than a row nobody could fill.\nNothing writes it but the board, from the runs it projects: there is no\nrecord behind it, since the runs it is read from are the record, and it can\nbe dropped and read again from them."
+    properties:
+      - name: id
+        type: Symfony\Component\Uid\Uuid
+      - name: process
+        type: Process
+      - name: path
+        type: string
+      - name: state
+        type: string
+        default: null
+      - name: verdicts
+        type: string
+        default: ''
+      - name: fixable
+        type: bool
+        default: false
+      - name: error
+        type: string
+        nullable: true
+        default: null
+      - name: run
+        type: ProcessRun
+        nullable: true
+        default: null
+      - name: dateUpdated
+        type: DateTimeInterface
+        nullable: true
+        default: null
+    methods:
+      - type: method
+        name: __construct
+      - type: method
+        name: buildEntityPath
+        parameters:
+          - type: string
+            name: className
+        return:
+          type: string
+      - type: method
+        name: getEntityKeyName
+        return:
+          type: string
+      - type: method
+        name: getEntityShortName
+        return:
+          type: string
+      - type: method
+        name: getId
+        return:
+          type: Symfony\Component\Uid\Uuid
+      - type: method
+        name: setId
+        parameters:
+          - type: Symfony\Component\Uid\Uuid
+            name: id
+        return:
+          type: void
+      - type: method
+        name: getTableizedName
+        return:
+          type: string
+      - type: method
+        name: getCamelName
+        return:
+          type: string
+      - type: method
+        name: getProcess
+        return:
+          type: Process
+      - type: method
+        name: setProcess
+        parameters:
+          - type: Process
+            name: process
+        return:
+          type: self
+      - type: method
+        name: getPath
+        return:
+          type: string
+      - type: method
+        name: setPath
+        parameters:
+          - type: string
+            name: path
+        return:
+          type: self
+      - type: method
+        name: getState
+        return:
+          type: string
+      - type: method
+        name: setState
+        parameters:
+          - type: string
+            name: state
+        return:
+          type: self
+      - type: method
+        name: getVerdicts
+        return:
+          type: string
+      - type: method
+        name: setVerdicts
+        parameters:
+          - type: string
+            name: verdicts
+        return:
+          type: self
+      - type: method
+        name: isFixable
+        return:
+          type: bool
+      - type: method
+        name: setFixable
+        parameters:
+          - type: bool
+            name: fixable
+        return:
+          type: self
+      - type: method
+        name: getError
+        return:
+          type: string
+      - type: method
+        name: setError
+        parameters:
+          - type: string
+            name: error
+        return:
+          type: self
+      - type: method
+        name: getRun
+        return:
+          type: ProcessRun
+      - type: method
+        name: setRun
+        parameters:
+          - type: ProcessRun
+            name: run
+        return:
+          type: self
+      - type: method
+        name: getDateUpdated
+        return:
+          type: DateTimeInterface
+      - type: method
+        name: setDateUpdated
+        parameters:
+          - type: DateTimeInterface
+            name: dateUpdated
+        return:
+          type: self
