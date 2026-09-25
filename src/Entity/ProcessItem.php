@@ -18,9 +18,9 @@ use Wexample\SymfonyWex\Repository\ProcessItemRepository;
  * moves that file and leaves the others where the last check put them, where
  * reading the last run alone would forget them all.
  *
- * Only the files that are not fine have a row. A check lists the files it
- * found at fault and counts the others without naming them, so « fine » is
- * the absence of a row rather than a row nobody could fill.
+ * A file a check found fine has a row too, once checks name those files
+ * (`passed`); before that, a check only counted them, and « fine » was the
+ * absence of a row.
  *
  * Nothing writes it but the board, from the runs it projects: there is no
  * record behind it, since the runs it is read from are the record, and it can
@@ -33,6 +33,9 @@ use Wexample\SymfonyWex\Repository\ProcessItemRepository;
 #[ORM\UniqueConstraint(columns: ['process_id', 'path'])]
 class ProcessItem extends AbstractEntity
 {
+    /** The last check found nothing wrong with it. */
+    public const string STATE_OK = 'ok';
+
     /** The last check found something wrong with it. */
     public const string STATE_FAULT = 'fault';
 
