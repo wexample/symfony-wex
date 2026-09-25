@@ -36,12 +36,18 @@ final readonly class ProcessRunArtifacts
     /**
      * The files the run wrote, relative to the app, in the order it listed them.
      *
+     * Read from the record and not from the row: the row catches up once the
+     * board has heard the run end, and a page asking for the file the moment
+     * the run is done would otherwise be told there is none.
+     *
      * @return string[]
      */
     public function paths(ProcessRun $run): array
     {
+        $record = is_file($run->getPath()) ? $this->reader->read($run->getPath()) : [];
+
         return array_values(array_filter(
-            (array) ($run->getDataValues()[self::KEY_WRITTEN] ?? []),
+            (array) ($record[ProcessRunHydrator::KEY_DATA][self::KEY_WRITTEN] ?? []),
             is_string(...)
         ));
     }
@@ -82,8 +88,10 @@ final readonly class ProcessRunArtifacts
         }
 
         foreach (array_slice($this->runs->findByProcess($process), 0, self::LOOKBACK) as $run) {
-            if (ProcessRun::STATE_COMPLETE !== $run->getState()
-                || [$item] !== ($this->reader->read($run->getPath())[ProcessRunHydrator::KEY_ITEMS] ?? null)) {
+            $record = is_file($run->getPath()) ? $this->reader->read($run->getPath()) : [];
+
+            if (ProcessRun::STATE_COMPLETE !== ($record[ProcessRunHydrator::KEY_STATE] ?? null)
+                || [$item] !== ($record[ProcessRunHydrator::KEY_ITEMS] ?? null)) {
                 continue;
             }
 
