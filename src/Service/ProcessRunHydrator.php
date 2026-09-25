@@ -17,12 +17,24 @@ use Wexample\SymfonyWex\Repository\ProcessRepository;
  */
 final readonly class ProcessRunHydrator
 {
+    /**
+     * What the run is asked to do, in place of the action its process declares:
+     * a check process fixed from one of its runs. Written by the board, read by
+     * wex; absent, the process's own.
+     */
+    public const KEY_ACTION = 'action';
     public const KEY_CURRENT = 'current';
     public const KEY_DATA = 'data';
     public const KEY_DATE_CREATED = 'date_created';
     public const KEY_DATE_ENDED = 'date_ended';
     public const KEY_DATE_STARTED = 'date_started';
     public const KEY_ITEMS_DONE = 'items_done';
+    /**
+     * What the run goes through, in place of what its selection holds: paths
+     * relative to the app. Written by the board, read by wex; absent, the
+     * selection.
+     */
+    public const KEY_ITEMS = 'items';
     public const KEY_ITEMS_TOTAL = 'items_total';
     public const KEY_PROCESS_ID = 'process_id';
     public const KEY_STATE = 'state';
