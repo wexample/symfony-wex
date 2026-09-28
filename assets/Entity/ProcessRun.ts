@@ -1,4 +1,4 @@
-import AbstractApiEntity from '@wexample/js-api/Common/AbstractApiEntity';
+import AbstractApiEntity from '@wexample/js-api-entity/Common/AbstractApiEntity';
 import schema from '../data/entity/process_run.json';
 
 export default class ProcessRun extends AbstractApiEntity {
