@@ -15,6 +15,10 @@ services:
         resource: '../../Api/Normalizer/*'
         tags: ['serializer.normalizer']
 
+    Wexample\SymfonyWex\Service\AgentServerRemote:
+        arguments:
+            $url: '%wexample_symfony_wex.agent_server.url%'
+
     Wexample\SymfonyWex\Service\AgentServerClient:
         arguments:
             $url: '%wexample_symfony_wex.agent_server.url%'
