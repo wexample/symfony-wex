@@ -30,6 +30,13 @@ final readonly class ProcessRunHydrator
     public const KEY_AUTHOR = 'author';
 
     /**
+     * Whether the run is asked to stop. Written by the board, read by wex
+     * before each file: the one under way goes to its end, then the run ends
+     * `cancelled`.
+     */
+    public const KEY_CANCEL = 'cancel';
+
+    /**
      * Whether wex commits what the run changed once it is done. Written by the
      * board, read by wex; after the run, what was committed.
      */

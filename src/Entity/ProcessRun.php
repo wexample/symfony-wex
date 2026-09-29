@@ -48,6 +48,16 @@ class ProcessRun extends AbstractEntity implements LivePublishedWithParentInterf
     /** Stopped on something it could not get past, the reason being in the data. */
     public const string STATE_FAILED = 'failed';
 
+    /** Stopped because it was asked to, between two files. */
+    public const string STATE_CANCELLED = 'cancelled';
+
+    /** The states a run does not leave. */
+    public const array STATES_ENDED = [
+        self::STATE_COMPLETE,
+        self::STATE_FAILED,
+        self::STATE_CANCELLED,
+    ];
+
     /** The file the run is written in, which is what says the app it happened in. */
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     protected string $path;
