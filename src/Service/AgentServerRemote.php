@@ -2,8 +2,8 @@
 
 namespace Wexample\SymfonyWex\Service;
 
-use Wexample\SymfonyRemote\Class\RemoteStatus;
-use Wexample\SymfonyRemote\Interface\RemoteInterface;
+use Wexample\PhpRemote\Class\RemoteStatus;
+use Wexample\PhpRemote\Interface\RemoteInterface;
 
 /**
  * The wex agent server as a remote: reachable when it answers the login

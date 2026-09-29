@@ -2,9 +2,9 @@
 
 namespace Wexample\SymfonyWex\Service;
 
+use Wexample\PhpRemote\Class\RemoteStatus;
+use Wexample\PhpRemote\Interface\RemoteInterface;
 use Wexample\PhpWex\Common\WexClient;
-use Wexample\SymfonyRemote\Class\RemoteStatus;
-use Wexample\SymfonyRemote\Interface\RemoteInterface;
 
 /**
  * The wex binary as a remote: available when `wex --version` runs, which
