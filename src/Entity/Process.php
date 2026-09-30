@@ -58,6 +58,14 @@ class Process extends AbstractEntity implements LivePublishedWithParentInterface
         self::SEVERITY_ERROR,
     ];
 
+    /** The same, most severe first: what holds things up is read before the rest. */
+    public const array SEVERITIES_BY_WEIGHT = [
+        self::SEVERITY_ERROR,
+        self::SEVERITY_WARNING,
+        self::SEVERITY_INFO,
+        self::SEVERITY_SUCCESS,
+    ];
+
     /** The file the process is declared in, which is what says the app it belongs to. */
     #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     protected string $path;

@@ -65,6 +65,30 @@ class ProcessItemRepository extends AbstractRepository
     }
 
     /**
+     * The files at fault for any of those processes, each with its process.
+     *
+     * @param Process[] $processes
+     *
+     * @return ProcessItem[]
+     */
+    public function findFaultsByProcesses(array $processes): array
+    {
+        if ([] === $processes) {
+            return [];
+        }
+
+        return $this->createQueryBuilder($alias = $this->getEntityQueryAlias())
+            ->addSelect('process')
+            ->join($alias.'.process', 'process')
+            ->where($alias.'.process IN (:processes)')
+            ->andWhere($alias.'.state = :state')
+            ->setParameter('processes', $processes)
+            ->setParameter('state', ProcessItem::STATE_FAULT)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * How many files of each process of those are in each state.
      *
      * @param Process[] $processes
