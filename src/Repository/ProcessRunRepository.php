@@ -42,6 +42,15 @@ class ProcessRunRepository extends AbstractRepository
             ->getResult();
     }
 
+    /** The last run of a process, or null when it never ran. */
+    public function findLatest(Process $process): ?ProcessRun
+    {
+        return $this->queryByProcess($process)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /**
      * The same, left open: what a listing reads a page at a time.
      */
