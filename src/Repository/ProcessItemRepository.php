@@ -65,27 +65,34 @@ class ProcessItemRepository extends AbstractRepository
     }
 
     /**
-     * The files at fault for any of those processes, each with its process.
+     * The files at fault for any of those processes, each with its process —
+     * or one file only, when its path is given.
      *
      * @param Process[] $processes
      *
      * @return ProcessItem[]
      */
-    public function findFaultsByProcesses(array $processes): array
+    public function findFaultsByProcesses(array $processes, ?string $path = null): array
     {
         if ([] === $processes) {
             return [];
         }
 
-        return $this->createQueryBuilder($alias = $this->getEntityQueryAlias())
+        $builder = $this->createQueryBuilder($alias = $this->getEntityQueryAlias())
             ->addSelect('process')
             ->join($alias.'.process', 'process')
             ->where($alias.'.process IN (:processes)')
             ->andWhere($alias.'.state = :state')
             ->setParameter('processes', $processes)
-            ->setParameter('state', ProcessItem::STATE_FAULT)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('state', ProcessItem::STATE_FAULT);
+
+        if (null !== $path) {
+            $builder
+                ->andWhere($alias.'.path = :path')
+                ->setParameter('path', $path);
+        }
+
+        return $builder->getQuery()->getResult();
     }
 
     /**
