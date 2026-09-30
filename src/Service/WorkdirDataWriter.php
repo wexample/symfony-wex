@@ -66,6 +66,23 @@ final readonly class WorkdirDataWriter
     }
 
     /**
+     * Writes one file in the directory a record carries its files in — an
+     * agent's `context.j2`, what it is told beyond its name and description.
+     */
+    public function writeAsset(
+        string $file,
+        string $name,
+        string $content,
+    ): void {
+        $this->openAssetsDirectory($file);
+
+        $asset = $this->assetsDirectory($file).'/'.$name;
+        $this->filesystem->dumpFile($asset, $content);
+        // Shared with wex over the same bind mount as the record itself.
+        $this->filesystem->chmod($asset, 0666);
+    }
+
+    /**
      * Takes a record away, and the directory it carried its files in.
      *
      * Both go, because both were opened here: a directory left behind would be
