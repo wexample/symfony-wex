@@ -3,7 +3,5 @@
 {% block form_body %}
     {{ form_row(form.title) }}
     {{ form_row(form.patterns) }}
-    <div class="form--actions">
-        {{ form_widget(form.submit) }}
-    </div>
+    {{ form_actions(form) }}
 {% endblock %}

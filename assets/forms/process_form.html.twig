@@ -6,7 +6,5 @@
     {{ form_row(form.selection) }}
     {{ form_row(form.severity) }}
     {{ form_row(form.options) }}
-    <div class="form--actions">
-        {{ form_widget(form.submit) }}
-    </div>
+    {{ form_actions(form) }}
 {% endblock %}
