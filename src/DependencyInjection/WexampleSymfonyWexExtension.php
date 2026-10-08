@@ -5,6 +5,7 @@ namespace Wexample\SymfonyWex\DependencyInjection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Wexample\SymfonyHelpers\DependencyInjection\AbstractWexampleSymfonyExtension;
 use Wexample\SymfonyWex\Interface\FileViewInterface;
+use Wexample\SymfonyWex\Interface\FileZoneInterface;
 
 class WexampleSymfonyWexExtension extends AbstractWexampleSymfonyExtension
 {
@@ -17,11 +18,15 @@ class WexampleSymfonyWexExtension extends AbstractWexampleSymfonyExtension
             $container
         );
 
-        // So a bundle offers a view of some files by implementing the
-        // interface, with nothing to add in its own services.yaml.
+        // So a bundle offers a view of some files, or zones beside them, by
+        // implementing the interface, with nothing to add in its own
+        // services.yaml.
         $container
             ->registerForAutoconfiguration(FileViewInterface::class)
             ->addTag(FileViewInterface::TAG);
+        $container
+            ->registerForAutoconfiguration(FileZoneInterface::class)
+            ->addTag(FileZoneInterface::TAG);
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
