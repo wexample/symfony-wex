@@ -3,7 +3,7 @@
   "description": "Symfony integration of the wex CLI PHP port",
   "type": "library",
   "license": "MIT",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "autoload": {
     "psr-4": {
       "Wexample\\SymfonyWex\\": "src/"
@@ -22,7 +22,7 @@
     "symfony/uid": "^7.0",
     "symfony/yaml": "^7.0",
     "wexample/symfony-api": ">=13.0.0",
-    "wexample/symfony-live": ">=5.1.0",
+    "wexample/symfony-live": ">=5.2.0",
     "wexample/symfony-pseudocode": ">=3.0.0",
     "wexample/symfony-forms": ">=12.0.0",
     "wexample/symfony-helpers": ">=16.0.0",
