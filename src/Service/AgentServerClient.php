@@ -42,6 +42,8 @@ final readonly class AgentServerClient
 
     public const string KEY_TYPE = 'type';
 
+    public const string PATH_AGENT_ENSURE = '/agent/ensure';
+
     public const string PATH_DATA = '/data/';
 
     public const string PATH_LOGIN_COMPLETE = '/auth/claude/complete';
@@ -148,6 +150,24 @@ final readonly class AgentServerClient
     public function data(string $kind): array
     {
         return $this->call(Request::METHOD_GET, self::PATH_DATA.$kind)[self::KEY_RECORDS];
+    }
+
+    /**
+     * Makes sure the app holds an agent of this name, which wex creates when it
+     * has none: the record's format is wex's, and nothing here writes it.
+     *
+     * @param string $app the app's path, as both containers mount it
+     *
+     * @return array{name: string, path: string, created: bool}
+     */
+    public function ensureAgent(
+        string $app,
+        string $name,
+    ): array {
+        return $this->call(Request::METHOD_POST, self::PATH_AGENT_ENSURE, [
+            'app' => $app,
+            'name' => $name,
+        ]);
     }
 
     /**
