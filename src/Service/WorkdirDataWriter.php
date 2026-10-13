@@ -62,7 +62,13 @@ final readonly class WorkdirDataWriter
      */
     public function openAssetsDirectory(string $file): void
     {
-        $this->filesystem->mkdir($this->assetsDirectory($file));
+        $directory = $this->assetsDirectory($file);
+
+        $this->filesystem->mkdir($directory);
+        // Shared like the record: the board makes it as root, and the agent,
+        // running as its own user, takes its turn lock and writes its
+        // transcript in it. Left at root's 0755, the first turn is refused.
+        $this->filesystem->chmod($directory, 0777);
     }
 
     /**
