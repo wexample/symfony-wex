@@ -72,8 +72,12 @@ final readonly class AgentServerClient
     /**
      * Continues a conversation, and gives back each event as the server writes it.
      *
-     * @param string $appPath where the app holding the conversation is mounted,
-     *                        which the server sees at that same path
+     * @param string      $appPath where the app holding the conversation is mounted,
+     *                             which the server sees at that same path
+     * @param bool        $commit  whether the server commits what the turn wrote, once
+     *                             it is over — said as a last `commit` event
+     * @param string|null $author  `Name <email>` the commit is signed by, the agent's
+     *                             own when null
      *
      * @return iterable<array<string, mixed>>
      */
@@ -81,6 +85,8 @@ final readonly class AgentServerClient
         string $appPath,
         string $sessionId,
         string $prompt,
+        bool $commit = false,
+        ?string $author = null,
     ): iterable {
         $response = $this->httpClient->request(
             Request::METHOD_POST,
@@ -97,6 +103,8 @@ final readonly class AgentServerClient
                     'app' => $appPath,
                     'session_id' => $sessionId,
                     'prompt' => $prompt,
+                    'commit' => $commit,
+                    'author' => $author,
                 ],
                 'timeout' => self::TIMEOUT_IDLE,
                 // A turn lasts as long as the model does, and nothing here knows
