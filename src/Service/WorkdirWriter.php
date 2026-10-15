@@ -2,9 +2,11 @@
 
 namespace Wexample\SymfonyWex\Service;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 use Wexample\PhpWex\Helper\WorkdirHelper;
+use Wexample\SymfonyWex\Event\WorkdirPathWrittenEvent;
 
 /**
  * Writes back into the `.wex` directory what was read from it.
@@ -17,6 +19,7 @@ class WorkdirWriter
 {
     public function __construct(
         private readonly Filesystem $filesystem,
+        private readonly EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -45,6 +48,8 @@ class WorkdirWriter
                 2
             )
         );
+
+        $this->dispatcher->dispatch(new WorkdirPathWrittenEvent($file));
     }
 
     /**

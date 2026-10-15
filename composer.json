@@ -19,6 +19,7 @@
     "php": ">=8.5",
     "doctrine/orm": "^3.0",
     "symfony/http-client": "^7.0",
+    "symfony/process": "^7.0",
     "symfony/uid": "^7.0",
     "symfony/yaml": "^7.0",
     "wexample/symfony-api": ">=13.0.0",

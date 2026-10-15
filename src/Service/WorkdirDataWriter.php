@@ -2,7 +2,9 @@
 
 namespace Wexample\SymfonyWex\Service;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Wexample\SymfonyWex\Event\WorkdirPathWrittenEvent;
 
 /**
  * Writes back a record of `.wex/data`, the counterpart of `WorkdirDataReader`.
@@ -11,11 +13,15 @@ use Symfony\Component\Filesystem\Filesystem;
  * with the values, so nothing here has to know the app it belongs to or the
  * kind it is. What a record means is not known here either: these are the
  * values it was given.
+ *
+ * Every path it writes or takes away is said (`WorkdirPathWrittenEvent`), for
+ * whoever commits what the board wrote.
  */
 final readonly class WorkdirDataWriter
 {
     public function __construct(
         private Filesystem $filesystem,
+        private EventDispatcherInterface $dispatcher,
     ) {
     }
 
@@ -49,6 +55,8 @@ final readonly class WorkdirDataWriter
         // share no uid on. Left at the creator's default, the second writer
         // cannot touch what the first made; world-writable, either one can.
         $this->filesystem->chmod($file, 0666);
+
+        $this->dispatcher->dispatch(new WorkdirPathWrittenEvent($file));
     }
 
     /**
@@ -86,6 +94,8 @@ final readonly class WorkdirDataWriter
         $this->filesystem->dumpFile($asset, $content);
         // Shared with wex over the same bind mount as the record itself.
         $this->filesystem->chmod($asset, 0666);
+
+        $this->dispatcher->dispatch(new WorkdirPathWrittenEvent($asset));
     }
 
     /**
@@ -101,6 +111,9 @@ final readonly class WorkdirDataWriter
             $file,
             $this->assetsDirectory($file),
         ]);
+
+        $this->dispatcher->dispatch(new WorkdirPathWrittenEvent($file));
+        $this->dispatcher->dispatch(new WorkdirPathWrittenEvent($this->assetsDirectory($file)));
     }
 
     private function assetsDirectory(string $file): string
