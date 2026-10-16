@@ -42,7 +42,7 @@ final readonly class AgentServerClient
 
     public const string KEY_TYPE = 'type';
 
-    public const string PATH_AGENT_ENSURE = '/agent/ensure';
+    public const string PATH_COMMAND = '/command';
 
     public const string PATH_DATA = '/data/';
 
@@ -161,6 +161,28 @@ final readonly class AgentServerClient
     }
 
     /**
+     * Runs a wex command marked for the API (`@api_command`), and gives back
+     * what it returned.
+     *
+     * What the board asks wex to do is a command that also runs from a
+     * terminal; this is only its transport. The app is named by its path, as
+     * on every other call, and handed to the command as its `app_path`.
+     *
+     * @param array<string, mixed> $arguments the command's options, by name
+     */
+    public function command(
+        string $command,
+        ?string $appPath = null,
+        array $arguments = [],
+    ): mixed {
+        return $this->call(Request::METHOD_POST, self::PATH_COMMAND, array_filter([
+            'command' => $command,
+            'app' => $appPath,
+            'arguments' => $arguments ?: null,
+        ], static fn (mixed $value): bool => null !== $value))['content'];
+    }
+
+    /**
      * Makes sure the app holds an agent of this name, which wex creates when it
      * has none: the record's format is wex's, and nothing here writes it.
      *
@@ -172,10 +194,7 @@ final readonly class AgentServerClient
         string $app,
         string $name,
     ): array {
-        return $this->call(Request::METHOD_POST, self::PATH_AGENT_ENSURE, [
-            'app' => $app,
-            'name' => $name,
-        ]);
+        return $this->command('ai::agent/ensure', $app, ['name' => $name]);
     }
 
     /**
