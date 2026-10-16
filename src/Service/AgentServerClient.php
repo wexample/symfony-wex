@@ -169,32 +169,24 @@ final readonly class AgentServerClient
      * on every other call, and handed to the command as its `app_path`.
      *
      * @param array<string, mixed> $arguments the command's options, by name
+     * @param bool                 $commit    whether the command commits what it
+     *                                        wrote — its `--commit`
+     * @param string|null          $author    `Name <email>` that commit is signed by
      */
     public function command(
         string $command,
         ?string $appPath = null,
         array $arguments = [],
+        bool $commit = false,
+        ?string $author = null,
     ): mixed {
         return $this->call(Request::METHOD_POST, self::PATH_COMMAND, array_filter([
             'command' => $command,
             'app' => $appPath,
             'arguments' => $arguments ?: null,
+            'commit' => $commit ?: null,
+            'author' => $commit ? $author : null,
         ], static fn (mixed $value): bool => null !== $value))['content'];
-    }
-
-    /**
-     * Makes sure the app holds an agent of this name, which wex creates when it
-     * has none: the record's format is wex's, and nothing here writes it.
-     *
-     * @param string $app the app's path, as both containers mount it
-     *
-     * @return array{name: string, path: string, created: bool}
-     */
-    public function ensureAgent(
-        string $app,
-        string $name,
-    ): array {
-        return $this->command('ai::agent/ensure', $app, ['name' => $name]);
     }
 
     /**
