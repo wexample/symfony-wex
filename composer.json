@@ -29,6 +29,7 @@
     "wexample/symfony-helpers": ">=16.0.0",
     "wexample/symfony-messenger": ">=3.1.0",
     "wexample/symfony-remote": ">=2.0.0",
+    "wexample/php-git": ">=1.0.1",
     "wexample/php-pseudocode": ">=2.2.0",
     "wexample/php-wex": ">=1.0.0"
   },
