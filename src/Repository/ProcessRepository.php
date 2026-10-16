@@ -31,6 +31,31 @@ class ProcessRepository extends AbstractRepository
     }
 
     /**
+     * A process wex ships, which it lists under that identity and no file
+     * declares. Hydrated, as the other, from what wex says of it.
+     */
+    public function createNewProcessFromWex(Uuid $id): Process
+    {
+        return new Process(id: $id);
+    }
+
+    /**
+     * The processes wex ships, the same for every app.
+     *
+     * @return Process[]
+     */
+    public function findBuiltIn(): array
+    {
+        return $this->findBy(['path' => null], ['title' => self::SORT_ASC]);
+    }
+
+    /** The process wex ships under that name, null when it ships none. */
+    public function findBuiltInByName(string $name): ?Process
+    {
+        return $this->findOneBy(['path' => null, 'name' => $name]);
+    }
+
+    /**
      * The processs of an app, by title.
      *
      * @return Process[]

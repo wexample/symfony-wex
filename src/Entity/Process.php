@@ -25,7 +25,8 @@ use Wexample\SymfonyWex\Repository\ProcessRepository;
  *
  * Like a selection, it travels with the project it describes: it is declared in
  * `.wex/data/process/<uuid>.json`, and this row is rebuilt from that file and
- * never written back to it.
+ * never written back to it. Or it is one wex ships — `commit` —: no file, no
+ * app, an identity following from its name, and read only.
  */
 #[ApiEntity]
 #[PseudocodeExport(inherited: true)]
@@ -66,9 +67,16 @@ class Process extends AbstractEntity implements LivePublishedWithParentInterface
         self::SEVERITY_SUCCESS,
     ];
 
-    /** The file the process is declared in, which is what says the app it belongs to. */
-    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
-    protected string $path;
+    /**
+     * The file the process is declared in, which is what says the app it
+     * belongs to; null for one wex ships, which belongs to every app.
+     */
+    #[ORM\Column(type: Types::STRING, length: 255, unique: true, nullable: true)]
+    protected ?string $path = null;
+
+    /** What wex calls a process it ships — `commit` —, null for an app's own. */
+    #[ORM\Column(type: Types::STRING, length: 64, nullable: true)]
+    protected ?string $name = null;
 
     /**
      * The app it belongs to, read off where its file sits: the relation says
@@ -133,13 +141,19 @@ class Process extends AbstractEntity implements LivePublishedWithParentInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?DateTimeInterface $dateCreated = null;
 
-    public function __construct(string $path)
-    {
+    /**
+     * @param string|null $path the declaration of an app's process
+     * @param Uuid|null   $id   the identity wex gives a process it ships, which has no path
+     */
+    public function __construct(
+        ?string $path = null,
+        ?Uuid $id = null,
+    ) {
         parent::__construct();
 
         $this->path = $path;
 
-        $this->setId(self::idFor($path));
+        $this->setId(null !== $path ? self::idFor($path) : $id);
     }
 
     /** The identity the declaration is named by, read straight off the file name. */
@@ -169,9 +183,27 @@ class Process extends AbstractEntity implements LivePublishedWithParentInterface
         return array_filter([$this->getApp()]);
     }
 
-    public function getPath(): string
+    public function getPath(): ?string
     {
         return $this->path;
+    }
+
+    /** Whether wex ships it: then no app declares it, and nothing here edits it. */
+    public function isBuiltIn(): bool
+    {
+        return null === $this->path;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     public function getType(): string

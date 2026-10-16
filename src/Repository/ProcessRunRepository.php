@@ -52,6 +52,20 @@ class ProcessRunRepository extends AbstractRepository
     }
 
     /**
+     * The last run of a process in the app at that path — what a process wex
+     * ships, run in every app, is asked for by.
+     */
+    public function findLatestIn(Process $process, string $appPath): ?ProcessRun
+    {
+        return $this->queryByProcess($process)
+            ->andWhere($this->queryField('path').' LIKE :prefix')
+            ->setParameter('prefix', addcslashes($appPath, '%_\\').'/%')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
      * The same, left open: what a listing reads a page at a time.
      */
     public function queryByProcess(Process $process): QueryBuilder

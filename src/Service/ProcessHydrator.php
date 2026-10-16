@@ -19,6 +19,7 @@ use Wexample\SymfonyWex\Repository\SelectionRepository;
 final readonly class ProcessHydrator
 {
     public const KEY_DATE_CREATED = 'date_created';
+    public const KEY_NAME = 'name';
     public const KEY_OPTIONS = 'options';
     public const KEY_SELECTION_ID = 'selection_id';
     public const KEY_SEVERITY = 'severity';
@@ -40,8 +41,10 @@ final readonly class ProcessHydrator
         array $values
     ): Process {
         return $process
-            // Not a value of the record: where the record sits.
-            ->setApp($this->apps->find(App::idFor($this->reader->appPath($process->getPath()))))
+            // Not a value of the record: where the record sits — nowhere for a
+            // process wex ships, which belongs to every app.
+            ->setApp($process->isBuiltIn() ? null : $this->apps->find(App::idFor($this->reader->appPath($process->getPath()))))
+            ->setName($values[self::KEY_NAME] ?? null)
             ->setTitle($values[self::KEY_TITLE] ?? null)
             ->setType((string) ($values[self::KEY_TYPE] ?? ''))
             ->setSelection($this->selection($values[self::KEY_SELECTION_ID] ?? null))
