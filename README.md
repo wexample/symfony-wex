@@ -1,6 +1,6 @@
 # symfony_wex
 
-Version: 8.0.0
+Version: 8.0.1
 
 `wexample/symfony-wex` is a Symfony bundle that integrates `wexample/php-wex` into the Symfony service container, registering `WexClient` as an autowired service so application code can invoke wex CLI commands without managing processes directly. It exposes a `wexample_symfony_wex` configuration block where the wex binary name or path, the working directory commands run from, and an optional timeout can be set. It targets Symfony developers who need programmatic access to the wex CLI from within a Symfony application.
 
@@ -78,8 +78,8 @@ The suite includes packages for configuration management, file handling, prompts
 - wexample/symfony-api: >=14.0.0
 - wexample/symfony-live: >=5.6.0
 - wexample/symfony-pseudocode: >=4.0.0
-- wexample/symfony-forms: >=13.0.0
-- wexample/symfony-helpers: >=17.0.0
+- wexample/symfony-forms: >=14.0.0
+- wexample/symfony-helpers: >=18.0.0
 - wexample/symfony-messenger: >=4.0.0
 - wexample/symfony-remote: >=2.0.0
 - wexample/php-git: >=2.0.0
