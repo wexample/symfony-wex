@@ -20,7 +20,7 @@ use Wexample\SymfonyWex\Repository\ProcessRepository;
  * Asked for by the process, like its runs, and narrowed to some states when
  * the reader filters: the page opens on the ones that need something done.
  */
-#[Route(path: 'api/process-item/', name: 'api_process_item_')]
+#[Route(path: '_api/process-item/', name: 'api_process_item_')]
 class ProcessItemController extends AbstractApiController
 {
     final public const string QUERY_OPTION_PROCESS = 'process';

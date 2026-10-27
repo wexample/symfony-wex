@@ -20,7 +20,7 @@ use Wexample\SymfonyWex\Repository\ProcessRunRepository;
  * A listing is always asked for by the process that was run: a run says little
  * on its own, and nothing here answers with the runs of the whole board.
  */
-#[Route(path: 'api/process-run/', name: 'api_process_run_')]
+#[Route(path: '_api/process-run/', name: 'api_process_run_')]
 class ProcessRunController extends AbstractApiController
 {
     final public const string QUERY_OPTION_PROCESS = 'process';
