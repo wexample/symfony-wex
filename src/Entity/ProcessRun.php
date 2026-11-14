@@ -12,6 +12,7 @@ use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyLive\Attribute\LiveEntity;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyLive\Interface\LivePublishedWithParentInterface;
+use Wexample\SymfonyWex\Interface\WorkdirRecordInterface;
 use Wexample\SymfonyWex\Repository\ProcessRunRepository;
 
 /**
@@ -34,7 +35,7 @@ use Wexample\SymfonyWex\Repository\ProcessRunRepository;
 #[PseudocodeExport(inherited: true)]
 #[ORM\Entity(repositoryClass: ProcessRunRepository::class)]
 #[ORM\Table(name: 'process_run')]
-class ProcessRun extends AbstractEntity implements LivePublishedWithParentInterface
+class ProcessRun extends AbstractEntity implements LivePublishedWithParentInterface, WorkdirRecordInterface
 {
     /** Asked for, and waiting for a worker to pick it up. */
     public const string STATE_PENDING = 'pending';

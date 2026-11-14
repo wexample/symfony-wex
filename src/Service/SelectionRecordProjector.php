@@ -12,23 +12,18 @@ use Wexample\SymfonyWex\Entity\Selection;
  * file refuses never looks accepted. Sweeping every mounted app is another job
  * and another caller's: this one is given the selection to re-read.
  */
-final readonly class SelectionRecordProjector
+final readonly class SelectionRecordProjector extends AbstractRecordProjector
 {
     public function __construct(
-        private WorkdirDataReader $reader,
+        WorkdirDataReader $reader,
         private SelectionHydrator $hydrator,
-        private EntityManagerInterface $entityManager,
+        EntityManagerInterface $entityManager,
     ) {
+        parent::__construct($reader, $entityManager);
     }
 
     public function projectOne(Selection $selection): void
     {
-        $this->hydrator->hydrate(
-            $selection,
-            $this->reader->read($selection->getPath())
-        );
-
-        $this->entityManager->persist($selection);
-        $this->entityManager->flush();
+        $this->project($selection, fn (array $values) => $this->hydrator->hydrate($selection, $values));
     }
 }

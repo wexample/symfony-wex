@@ -132,18 +132,40 @@ final readonly class AgentServerClient
             // A chunk is a piece of the wire and not a line: the end of one is
             // usually cut in two, and waits here for the rest of itself.
             while (false !== $break = strpos($buffer, "\n")) {
-                $line = trim(substr($buffer, 0, $break));
+                $line = substr($buffer, 0, $break);
                 $buffer = substr($buffer, $break + 1);
 
-                if ('' !== $line) {
-                    $event = json_decode($line, true, flags: JSON_THROW_ON_ERROR);
-
-                    $this->log($event);
-
+                if (null !== $event = $this->event($line)) {
                     yield $event;
                 }
             }
         }
+
+        // The last line, when the server closes the stream without the line
+        // break after it: the event that says how the turn ended, most often.
+        if (null !== $event = $this->event($buffer)) {
+            yield $event;
+        }
+    }
+
+    /**
+     * One line of the stream as the event it says, logged; null for a blank one.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function event(string $line): ?array
+    {
+        $line = trim($line);
+
+        if ('' === $line) {
+            return null;
+        }
+
+        $event = json_decode($line, true, flags: JSON_THROW_ON_ERROR);
+
+        $this->log($event);
+
+        return $event;
     }
 
     /**

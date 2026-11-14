@@ -56,7 +56,7 @@ class ProcessRepository extends AbstractRepository
     }
 
     /**
-     * The processs of an app, by title.
+     * The processes of an app, by title.
      *
      * @return Process[]
      */

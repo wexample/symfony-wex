@@ -12,23 +12,18 @@ use Wexample\SymfonyWex\Entity\Process;
  * file refuses never looks accepted. Sweeping every mounted app is another job
  * and another caller's: this one is given the process to re-read.
  */
-final readonly class ProcessRecordProjector
+final readonly class ProcessRecordProjector extends AbstractRecordProjector
 {
     public function __construct(
-        private WorkdirDataReader $reader,
+        WorkdirDataReader $reader,
         private ProcessHydrator $hydrator,
-        private EntityManagerInterface $entityManager,
+        EntityManagerInterface $entityManager,
     ) {
+        parent::__construct($reader, $entityManager);
     }
 
     public function projectOne(Process $process): void
     {
-        $this->hydrator->hydrate(
-            $process,
-            $this->reader->read($process->getPath())
-        );
-
-        $this->entityManager->persist($process);
-        $this->entityManager->flush();
+        $this->project($process, fn (array $values) => $this->hydrator->hydrate($process, $values));
     }
 }

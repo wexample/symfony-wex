@@ -14,6 +14,7 @@ use Wexample\SymfonyHelpers\Entity\Traits\HasTitleTrait;
 use Wexample\SymfonyLive\Attribute\LiveEntity;
 use Wexample\SymfonyLive\Enum\LiveTopicAction;
 use Wexample\SymfonyLive\Interface\LivePublishedWithParentInterface;
+use Wexample\SymfonyWex\Interface\WorkdirRecordInterface;
 use Wexample\SymfonyWex\Repository\ProcessRepository;
 
 /**
@@ -36,7 +37,7 @@ use Wexample\SymfonyWex\Repository\ProcessRepository;
 // Subscribable because its runs publish on it: a table of them listens to the
 // process and hears about a run that did not exist when the page was drawn.
 #[LiveEntity(actions: [LiveTopicAction::CREATE, LiveTopicAction::UPDATE])]
-class Process extends AbstractEntity implements LivePublishedWithParentInterface
+class Process extends AbstractEntity implements LivePublishedWithParentInterface, WorkdirRecordInterface
 {
     use HasTitleTrait;
 

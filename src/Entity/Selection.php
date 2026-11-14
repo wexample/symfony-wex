@@ -11,6 +11,7 @@ use Wexample\SymfonyApi\Attribute\ApiEntity;
 use Wexample\SymfonyForms\Attribute\EntityForm;
 use Wexample\SymfonyHelpers\Entity\AbstractEntity;
 use Wexample\SymfonyHelpers\Entity\Traits\HasTitleTrait;
+use Wexample\SymfonyWex\Interface\WorkdirRecordInterface;
 use Wexample\SymfonyWex\Repository\SelectionRepository;
 
 /**
@@ -29,7 +30,7 @@ use Wexample\SymfonyWex\Repository\SelectionRepository;
 #[EntityForm]
 #[ORM\Entity(repositoryClass: SelectionRepository::class)]
 #[ORM\Table(name: 'selection')]
-class Selection extends AbstractEntity
+class Selection extends AbstractEntity implements WorkdirRecordInterface
 {
     use HasTitleTrait;
 

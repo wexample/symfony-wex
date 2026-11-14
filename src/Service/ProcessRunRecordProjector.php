@@ -13,23 +13,18 @@ use Wexample\SymfonyWex\Entity\ProcessRun;
  * the message says — so a worker that wrote and then failed to ring leaves a
  * file that still holds the truth.
  */
-final readonly class ProcessRunRecordProjector
+final readonly class ProcessRunRecordProjector extends AbstractRecordProjector
 {
     public function __construct(
-        private WorkdirDataReader $reader,
+        WorkdirDataReader $reader,
         private ProcessRunHydrator $hydrator,
-        private EntityManagerInterface $entityManager,
+        EntityManagerInterface $entityManager,
     ) {
+        parent::__construct($reader, $entityManager);
     }
 
     public function projectOne(ProcessRun $run): void
     {
-        $this->hydrator->hydrate(
-            $run,
-            $this->reader->read($run->getPath())
-        );
-
-        $this->entityManager->persist($run);
-        $this->entityManager->flush();
+        $this->project($run, fn (array $values) => $this->hydrator->hydrate($run, $values));
     }
 }
