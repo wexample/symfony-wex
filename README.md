@@ -1,6 +1,6 @@
 # symfony_wex
 
-Version: 10.0.1
+Version: 10.0.2
 
 Symfony integration of the wex CLI PHP port
 
